@@ -911,7 +911,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
             <ShotTimeline
               match={selectedAnalysisMatch}
               displayedVideoUri={displayedVideoUri}
-              onShotPress={ts => { if (displayedVideoUri) navigation.navigate('VideoPlayer', { uri: displayedVideoUri, startTime: ts }); }}
+              onShotPress={ts => { if (displayedVideoUri) navigation.navigate('VideoPlayer', { uri: displayedVideoUri, startTime: ts }); else {} }}
               colors={colors}
               s={s}
               t={t}
@@ -1697,7 +1697,7 @@ function ShotTimeline({ match, displayedVideoUri, onShotPress, colors, s, t }: {
   t: (k: string) => string;
 }) {
   const shots = match?.result?.shots_timeline;
-  if (!shots?.length || !displayedVideoUri) return null;
+  if (!shots?.length) return null;
 
   const winners = shots.filter(sh => sh.outcome === 'winner').length;
   const errors  = shots.filter(sh => sh.outcome === 'fehler').length;
