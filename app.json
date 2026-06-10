@@ -1,15 +1,56 @@
 {
   "expo": {
-    "name": "MyApp",
+    "name": "PadelVision",
     "slug": "MyApp",
     "version": "1.0.0",
+    "scheme": "padelvision",
+    "newArchEnabled": false,
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/logo.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090C14"
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "PadelVision möchte deine Aufnahmen in der Fotomediathek speichern.",
+          "savePhotosPermission": "PadelVision möchte Videos in deiner Mediathek speichern.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      "expo-web-browser",
+      "expo-apple-authentication",
+      "expo-video"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.padelvision.ai",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "PadelVision benötigt Kamerazugriff, um deine Matches aufzunehmen.",
+        "NSMicrophoneUsageDescription": "PadelVision benötigt Mikrofonzugriff, um den Match-Ton aufzunehmen.",
+        "NSPhotoLibraryUsageDescription": "PadelVision möchte deine Aufnahmen in der Fotomediathek speichern.",
+        "NSPhotoLibraryAddUsageDescription": "PadelVision möchte Videos in deiner Mediathek speichern.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.padelvision.ai",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.READ_MEDIA_AUDIO"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -20,6 +61,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9edc1e0b-2288-42fa-a35b-5347d226767e"
+      }
+    },
+    "owner": "yassin22923"
   }
 }

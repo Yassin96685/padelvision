@@ -1,0 +1,53 @@
+workflows:
+  ios-release:
+    name: PadelVision iOS Release
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    integrations:
+      app_store_connect: PadelVision_Key
+
+    environment:
+      node: 20.17.0
+      groups:
+        - padelvision_secrets
+      vars:
+        BUNDLE_ID: com.padelvision.ai
+        APP_STORE_ID: "6778127321"
+        XCODE_SCHEME: PadelVision
+        XCODE_WORKSPACE: ios/PadelVision.xcworkspace
+
+    scripts:
+      - name: Install dependencies
+        script: npm ci
+
+      - name: Expo prebuild
+        script: npx expo prebuild --platform ios --clean
+
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+
+      - name: Set build number
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID" 2>/dev/null || echo "17")
+          cd ios && agvtool new-version -all $(($LATEST + 1))
+
+      - name: Build IPA
+        script: |
+          xcode-project use-profiles
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        submit_to_testflight: true
+        expire_build_submitted_for_review: true
