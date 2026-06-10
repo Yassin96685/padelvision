@@ -15,6 +15,7 @@ import TutorialModal, { shouldShowTutorial } from '../components/TutorialModal';
 import { analyzeVideo, ClaudeAnalysisResult } from '../services/claudeAnalysis';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import { uploadThumbnail as supaUploadThumbnail, updateMatchUrls } from '../services/supabaseService';
+import { supabase } from '../services/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../store/AuthContext';
 import { isProActive } from '../services/purchases';
@@ -540,6 +541,18 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
       try { navigation.navigate('Paywall'); } catch {}
       return false;
     }
+    // Also check Supabase — handles reinstalls where AsyncStorage is empty
+    try {
+      const { count } = await supabase
+        .from('matches')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      if ((count ?? 0) >= 1) {
+        await AsyncStorage.setItem(`@padelvision/free_analysis_done_${userId}`, 'true').catch(() => {});
+        try { navigation.navigate('Paywall'); } catch {}
+        return false;
+      }
+    } catch {}
     return true;
   };
 
