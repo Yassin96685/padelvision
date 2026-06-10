@@ -149,6 +149,7 @@ function Root() {
       setIsPro(true);
       return;
     }
+    AsyncStorage.removeItem('@padelvision/dev_pro').catch(() => {});
     isProActive()
       .then(active => setIsPro(active))
       .catch(() => setIsPro(false));
@@ -165,7 +166,7 @@ function Root() {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut().catch(() => {});
-    await AsyncStorage.multiRemove(['@padelvision/registered', USER_KEY]).catch(() => {});
+    await AsyncStorage.multiRemove(['@padelvision/registered', USER_KEY, '@padelvision/dev_pro']).catch(() => {});
   }, []);
 
   const markFreeAnalysisDone = useCallback(() => {
