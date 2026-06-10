@@ -21,11 +21,15 @@ workflows:
       - name: Expo prebuild
         script: npx expo prebuild --platform ios --clean
 
+      - name: Set up keychain
+        script: keychain initialize
+
       - name: Fetch signing files
         script: |
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
-            --create
+            --create \
+            --certificate-key @env:CERTIFICATE_PRIVATE_KEY
           keychain add-certificates
 
       - name: Set build number
