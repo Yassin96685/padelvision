@@ -1306,10 +1306,11 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
       </Modal>
 
       {/* Bottom-sheet modal */}
-      <Modal visible={recordModal} transparent animationType="slide">
+      <Modal visible={recordModal} transparent animationType="slide" onRequestClose={() => setRecordModal(false)}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); setRecordModal(false); }}>
             <View style={s.modalOverlay}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={s.modalCard}>
 
             {modalState === 'checklist' && (
@@ -1460,6 +1461,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
             )}
 
           </View>
+          </TouchableWithoutFeedback>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
