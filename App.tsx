@@ -168,6 +168,13 @@ function Root() {
     await AsyncStorage.multiRemove(['@padelvision/registered', USER_KEY]).catch(() => {});
   }, []);
 
+  const markFreeAnalysisDone = useCallback(() => {
+    const uid = session?.user?.id;
+    if (!uid) return;
+    AsyncStorage.setItem(`@padelvision/free_analysis_done_${uid}`, 'true').catch(() => {});
+    setFreeAnalysisDone(true);
+  }, [session?.user?.id]);
+
   if (isRecovery) {
     return (
       <ResetPasswordScreen onDone={() => {
@@ -185,7 +192,7 @@ function Root() {
 
   return (
     <MatchProvider userId={userId}>
-      <AuthContext.Provider value={{ signOut, userId, isPro: isPro ?? false }}>
+      <AuthContext.Provider value={{ signOut, userId, isPro: isPro ?? false, markFreeAnalysisDone }}>
         <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
         {session ? (
           !setupDone ? (

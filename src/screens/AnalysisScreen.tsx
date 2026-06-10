@@ -161,7 +161,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
   const s = useMemo(() => createStyles(colors), [colors]);
   const { t, locale } = useLocale();
   const insets = useSafeAreaInsets();
-  const { userId } = useAuth();
+  const { userId, markFreeAnalysisDone } = useAuth();
   const { addMatch, updateMatchMedia, deleteMatch, matches } = useMatches();
   const [tab, setTab] = useState(0);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -345,13 +345,10 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
     });
     setSelectedAnalysisIdx(0);
 
-    // Free analysis used — mark and show paywall after a short delay so user can see their result
+    // Free analysis used — trigger paywall via App.tsx state after short delay
     isProActive().then(pro => {
       if (!pro && userId) {
-        AsyncStorage.setItem(`@padelvision/free_analysis_done_${userId}`, 'true').catch(() => {});
-        setTimeout(() => {
-          try { navigation.navigate('Paywall'); } catch {}
-        }, 4000);
+        setTimeout(() => markFreeAnalysisDone(), 4000);
       }
     }).catch(() => {});
   }, [analysisDone, recordSeconds, videoUri, addMatch, locale, userId]);
