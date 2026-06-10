@@ -13,10 +13,6 @@ workflows:
         APP_STORE_ID: "6778127321"
         XCODE_SCHEME: PadelVision
         XCODE_WORKSPACE: ios/PadelVision.xcworkspace
-      app_store_connect:
-        key_identifier: $APP_STORE_CONNECT_KEY_ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
 
     scripts:
       - name: Install dependencies
@@ -50,5 +46,8 @@ workflows:
 
     publishing:
       app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         expire_build_submitted_for_review: true
