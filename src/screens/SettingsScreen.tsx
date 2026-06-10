@@ -65,6 +65,14 @@ export default function SettingsScreen({ navigation }: any) {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
   const [passwordSuccess, setPasswordSuccess] = React.useState(false);
+  const [authProvider, setAuthProvider] = React.useState<string>('email');
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const provider = session?.user?.app_metadata?.provider ?? 'email';
+      setAuthProvider(provider);
+    });
+  }, []);
 
   const changePassword = async () => {
     if (newPassword.length < 6) { setPasswordError('Mindestens 6 Zeichen'); return; }
@@ -233,8 +241,12 @@ export default function SettingsScreen({ navigation }: any) {
                 </>
               )}
               <SettingRow icon="mail-outline" iconBg={colors.primaryDim} iconColor={colors.primary} label="E-Mail" value={userEmail} colors={colors} s={s} onPress={() => {}} />
-              <View style={s.divider} />
-              <SettingRow icon="lock-closed-outline" iconBg={colors.cardAlt} iconColor={colors.textSec} label="Passwort ändern" value="" colors={colors} s={s} onPress={() => { setNewPassword(''); setConfirmPassword(''); setPasswordError(''); setPasswordSuccess(false); setPasswordModal(true); }} />
+              {authProvider === 'email' && (
+                <>
+                  <View style={s.divider} />
+                  <SettingRow icon="lock-closed-outline" iconBg={colors.cardAlt} iconColor={colors.textSec} label="Passwort ändern" value="" colors={colors} s={s} onPress={() => { setNewPassword(''); setConfirmPassword(''); setPasswordError(''); setPasswordSuccess(false); setPasswordModal(true); }} />
+                </>
+              )}
             </View>
           </>
         )}
