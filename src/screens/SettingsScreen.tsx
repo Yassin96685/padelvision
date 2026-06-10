@@ -71,13 +71,16 @@ export default function SettingsScreen({ navigation }: any) {
     if (newPassword !== confirmPassword) { setPasswordError('Passwörter stimmen nicht überein'); return; }
     setPasswordError('');
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        setPasswordError('Bitte ausloggen und neu einloggen, dann nochmal versuchen.');
+      await supabase.auth.refreshSession();
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        if (error.message.toLowerCase().includes('session')) {
+          setPasswordError('Sitzung abgelaufen. Bitte ausloggen und neu einloggen.');
+        } else {
+          setPasswordError(error.message);
+        }
         return;
       }
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) { setPasswordError(error.message); return; }
       setPasswordSuccess(true);
       setNewPassword('');
       setConfirmPassword('');
