@@ -337,7 +337,7 @@ export default function SettingsScreen({ navigation }: any) {
         {/* About */}
         <Text style={s.sectionTitle}>{t('settings.about')}</Text>
         <View style={s.section}>
-          <SettingRow icon="information-circle" iconBg={colors.cardAlt} iconColor={colors.textSec} label={t('settings.version')} value="1.0.0 (Demo)" colors={colors} s={s} onPress={() => {}} />
+          <SettingRow icon="information-circle" iconBg={colors.cardAlt} iconColor={colors.textSec} label={t('settings.version')} value="1.0.0" colors={colors} s={s} onPress={() => {}} />
           <View style={s.divider} />
           <SettingRow icon="shield-checkmark" iconBg={colors.cardAlt} iconColor={colors.textSec} label={t('settings.privacyPolicy')} value="" colors={colors} s={s} onPress={() => setPolicyModal('privacy')} />
           <View style={s.divider} />
