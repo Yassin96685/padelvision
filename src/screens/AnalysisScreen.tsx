@@ -1697,7 +1697,7 @@ function ShotTimeline({ match, displayedVideoUri, onShotPress, colors, s, t }: {
   t: (k: string) => string;
 }) {
   const shots = match?.result?.shots_timeline;
-  if (!shots?.length) return null;
+  if (!shots?.length || !displayedVideoUri) return null;
 
   const winners = shots.filter(sh => sh.outcome === 'winner').length;
   const errors  = shots.filter(sh => sh.outcome === 'fehler').length;

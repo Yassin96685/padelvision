@@ -72,6 +72,7 @@ export async function saveMatch(match: StoredMatch, userId?: string): Promise<vo
     improvements: match.result.improvements,
     strength_keys: match.result.strengthKeys ?? [],
     improvement_keys: match.result.improvementKeys ?? [],
+    result_json: match.result,
   });
   if (error) throw error;
 }
@@ -104,25 +105,32 @@ export async function loadMatches(): Promise<StoredMatch[]> {
   }
   if (!data) return [];
 
-  return data.map((row: any) => ({
-    id: row.id,
-    date: row.date,
-    recordSeconds: row.record_seconds,
-    videoUri: row.video_url ?? null,
-    thumbnailUri: row.thumbnail_url ?? null,
-    opponent: row.opponent ?? undefined,
-    result: {
-      shots: row.shots,
-      winners: row.winners,
-      errors: row.errors,
-      errorRate: row.error_rate,
-      score: row.score,
-      coverage: row.coverage,
-      avgRally: row.avg_rally,
-      strengths: row.strengths ?? [],
-      improvements: row.improvements ?? [],
-      strengthKeys: row.strength_keys ?? [],
-      improvementKeys: row.improvement_keys ?? [],
-    },
-  }));
+  return data.map((row: any) => {
+    const rj = row.result_json;
+    return {
+      id: row.id,
+      date: row.date,
+      recordSeconds: row.record_seconds,
+      videoUri: row.video_url ?? null,
+      thumbnailUri: row.thumbnail_url ?? null,
+      opponent: row.opponent ?? undefined,
+      result: {
+        shots: row.shots,
+        winners: row.winners,
+        errors: row.errors,
+        errorRate: row.error_rate,
+        score: row.score,
+        coverage: row.coverage,
+        avgRally: row.avg_rally,
+        strengths: row.strengths ?? [],
+        improvements: row.improvements ?? [],
+        strengthKeys: row.strength_keys ?? [],
+        improvementKeys: row.improvement_keys ?? [],
+        coachingTips: rj?.coachingTips ?? undefined,
+        skillLevel: rj?.skillLevel ?? undefined,
+        zones: rj?.zones ?? undefined,
+        shots_timeline: rj?.shots_timeline ?? undefined,
+      },
+    };
+  });
 }
