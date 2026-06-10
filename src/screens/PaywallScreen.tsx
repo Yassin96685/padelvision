@@ -61,10 +61,10 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
           monthly: offering.monthly   ?? offering.availablePackages.find(p => p.identifier === 'monthly') ?? null,
         });
       } else {
-        console.warn('[Paywall] getOfferings returned null');
+        Alert.alert('Debug', 'getOfferings returned null — no offering available');
       }
     }).catch((e: any) => {
-      console.warn('[Paywall] getOfferings error:', e?.message ?? e);
+      Alert.alert('Debug Error', e?.message ?? JSON.stringify(e) ?? 'unknown error');
     }).finally(() => setPackagesLoading(false));
   }, []);
 
