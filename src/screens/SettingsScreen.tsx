@@ -71,6 +71,11 @@ export default function SettingsScreen({ navigation }: any) {
     if (newPassword !== confirmPassword) { setPasswordError('Passwörter stimmen nicht überein'); return; }
     setPasswordError('');
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setPasswordError('Bitte ausloggen und neu einloggen, dann nochmal versuchen.');
+        return;
+      }
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) { setPasswordError(error.message); return; }
       setPasswordSuccess(true);
