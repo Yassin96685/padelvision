@@ -55,13 +55,16 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
     ]).start();
 
     getOfferings().then(offering => {
+      Alert.alert('RC Debug', `offering: ${offering ? 'vorhanden' : 'null'}\nannual: ${offering?.annual?.identifier ?? 'null'}\nmonthly: ${offering?.monthly?.identifier ?? 'null'}\npakete: ${offering?.availablePackages?.map(p => p.identifier).join(', ') ?? 'keine'}`);
       if (offering) {
         setPackages({
           yearly:  offering.annual    ?? offering.availablePackages.find(p => p.identifier === 'yearly')  ?? null,
           monthly: offering.monthly   ?? offering.availablePackages.find(p => p.identifier === 'monthly') ?? null,
         });
       }
-    }).catch(() => {}).finally(() => setPackagesLoading(false));
+    }).catch((e: any) => {
+      Alert.alert('RC Fehler', String(e?.message ?? e));
+    }).finally(() => setPackagesLoading(false));
   }, []);
 
   const handleSubscribe = async () => {
