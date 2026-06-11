@@ -73,14 +73,21 @@ export default function LanguagePickerScreen() {
         </View>
 
         <TouchableOpacity
-          style={[styles.btn, !selected && styles.btnOff]}
+          style={[styles.btnWrap, !selected && styles.btnOff]}
           onPress={() => { if (selected) setLocale(selected); }}
           disabled={!selected}
           activeOpacity={0.8}
         >
-          <Text style={styles.btnText}>
-            {selected ? CONTINUE_LABEL[selected] : 'Continue'}
-          </Text>
+          <LinearGradient
+            colors={['#00E87D', '#00C9A0']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.btn}
+          >
+            <Text style={styles.btnText}>
+              {selected ? CONTINUE_LABEL[selected] : 'Continue'}
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
@@ -95,7 +102,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: { alignItems: 'center', marginTop: 56 },
-  logo: { width: 88, height: 88, borderRadius: 22, marginBottom: 14 },
+  logo: {
+    width: 88, height: 88, borderRadius: 22, marginBottom: 14,
+    shadowColor: '#00E87D', shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35, shadowRadius: 20, elevation: 10,
+  },
   appName: {
     fontSize: 28,
     fontWeight: '800',
@@ -133,8 +144,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkIcon: { color: '#090C14', fontSize: 13, fontWeight: '800' },
+  btnWrap: {
+    borderRadius: 14,
+    shadowColor: '#00E87D', shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35, shadowRadius: 12, elevation: 6,
+  },
   btn: {
-    backgroundColor: '#00E87D',
     borderRadius: 14,
     paddingVertical: 17,
     alignItems: 'center',

@@ -249,10 +249,10 @@ export default function StatsScreen({ navigation }: { navigation: any }) {
                       {expanded && (
                         <View style={s.shotDetail}>
                           <View style={s.shotDetailRow}>
-                            <DetailStat label={t('stats.made')} value={`${made}`} color={colors.primary} />
-                            <DetailStat label={t('stats.missed')} value={`${shot.attempts - made}`} color={colors.danger} />
-                            <DetailStat label={t('stats.total')} value={`${shot.attempts}`} color={colors.textSec} />
-                            <DetailStat label={t('stats.rate')} value={`${shot.success}%`} color={colors.primary} />
+                            <DetailStat label={t('stats.made')} value={`${made}`} color={colors.primary} labelColor={colors.textSec} />
+                            <DetailStat label={t('stats.missed')} value={`${shot.attempts - made}`} color={colors.danger} labelColor={colors.textSec} />
+                            <DetailStat label={t('stats.total')} value={`${shot.attempts}`} color={colors.textSec} labelColor={colors.textSec} />
+                            <DetailStat label={t('stats.rate')} value={`${shot.success}%`} color={colors.primary} labelColor={colors.textSec} />
                           </View>
                         </View>
                       )}
@@ -704,7 +704,7 @@ function CourtDiagram({ s, colors, width: w, zonePercents }: { s: any; colors: a
 
 function OvCard({ value, label, color, s }: any) {
   return (
-    <View style={[s.ovCard, { borderColor: color + '44' }]}>
+    <View style={s.ovCard}>
       <Text style={[s.ovVal, { color }]}>{value}</Text>
       <Text style={s.ovLabel}>{label}</Text>
     </View>
@@ -722,11 +722,11 @@ function HeatStat({ icon, label, value, colors, s, color }: any) {
   );
 }
 
-function DetailStat({ label, value, color }: any) {
+function DetailStat({ label, value, color, labelColor }: any) {
   return (
     <View style={{ alignItems: 'center', flex: 1 }}>
-      <Text style={{ color, fontSize: 18, fontWeight: '800' }}>{value}</Text>
-      <Text style={{ color: '#888', fontSize: 11 }}>{label}</Text>
+      <Text style={{ color, fontSize: 18, fontWeight: '800', letterSpacing: -0.3 }}>{value}</Text>
+      <Text style={{ color: labelColor ?? '#888', fontSize: 11, fontWeight: '600' }}>{label}</Text>
     </View>
   );
 }
@@ -744,6 +744,8 @@ function createStyles(colors: any) {
       marginHorizontal: 16, marginBottom: 12,
       backgroundColor: colors.card, borderRadius: 18,
       padding: 18, borderWidth: 1, borderColor: colors.border,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06, shadowRadius: 8, elevation: 2,
     },
     streakTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 },
     streakLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
@@ -767,10 +769,14 @@ function createStyles(colors: any) {
     tabTextActive: { color: '#04120B' },
 
     overviewRow: { flexDirection: 'row', marginHorizontal: 16, gap: 8, marginBottom: 8 },
-    ovCard: { flex: 1, backgroundColor: colors.card, borderRadius: 14, padding: 14, alignItems: 'center', borderWidth: 1 },
-    ovVal: { fontSize: 20, fontWeight: '800' },
-    ovLabel: { color: colors.textSec, fontSize: 11, marginTop: 2, textAlign: 'center' },
-    sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginLeft: 16, marginBottom: 10, marginTop: 8 },
+    ovCard: { flex: 1, backgroundColor: colors.card, borderRadius: 14, padding: 14, alignItems: 'center', borderWidth: 1, borderColor: colors.border },
+    ovVal: { fontSize: 20, fontWeight: '800', letterSpacing: -0.3 },
+    ovLabel: { color: colors.textSec, fontSize: 10, fontWeight: '600', marginTop: 3, textAlign: 'center' },
+    sectionTitle: {
+      fontSize: 11, fontWeight: '700', color: colors.textSec,
+      marginLeft: 20, marginBottom: 10, marginTop: 8,
+      textTransform: 'uppercase', letterSpacing: 1,
+    },
 
     shotCard: { marginHorizontal: 16, marginBottom: 8, backgroundColor: colors.card, borderRadius: 14, padding: 14, borderWidth: 1, borderColor: colors.border },
     shotCardTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },

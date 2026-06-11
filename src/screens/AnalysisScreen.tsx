@@ -971,9 +971,9 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
             ) : (
               <>
                 <View style={s.errorSummary}>
-                  <SumCard value={`${totalErrors}`} label={t('analysis.totalErrors')} color={colors.primary} s={s} />
-                  <SumCard value={`${highErrors}`} label={t('analysis.critical')} color={colors.blue} s={s} />
-                  <SumCard value={`${Math.round(Math.max(0, (errorMatch ? errorMatch.result.shots - errorMatch.result.errors : 230 - totalErrors) / Math.max(1, errorMatch?.result.shots ?? 230) * 100))}%`} label={t('analysis.cleanPlay')} color={colors.primary} s={s} />
+                  <SumCard value={`${totalErrors}`} label={t('analysis.totalErrors')} color={colors.primary} s={s} borderColor={colors.border} />
+                  <SumCard value={`${highErrors}`} label={t('analysis.critical')} color={colors.blue} s={s} borderColor={colors.border} />
+                  <SumCard value={`${Math.round(Math.max(0, (errorMatch ? errorMatch.result.shots - errorMatch.result.errors : 230 - totalErrors) / Math.max(1, errorMatch?.result.shots ?? 230) * 100))}%`} label={t('analysis.cleanPlay')} color={colors.primary} s={s} borderColor={colors.border} />
                 </View>
                 <Text style={s.sectionTitle}>{t('analysis.unforcedErrors')}</Text>
                 <Text style={s.sectionSub}>{t('analysis.tapError')}</Text>
@@ -1798,9 +1798,9 @@ function CoachInsightCard({ matchCount, colors, s, coachTips, coachInsightLabel,
   );
 }
 
-function SumCard({ value, label, color, s }: any) {
+function SumCard({ value, label, color, s, borderColor }: any) {
   return (
-    <View style={[s.errorSumItem, { borderColor: color + '44' }]}>
+    <View style={[s.errorSumItem, { borderColor }]}>
       <Text style={[s.errorSumVal, { color }]}>{value}</Text>
       <Text style={s.errorSumLabel}>{label}</Text>
     </View>
@@ -1920,17 +1920,17 @@ function createStyles(colors: any) {
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingHorizontal: 20, paddingTop: 14, paddingBottom: 10 },
     title: { fontSize: 26, fontWeight: '800', color: colors.text, letterSpacing: -0.5 },
     sub: { fontSize: 13, color: colors.textSec, marginTop: 2 },
-    uploadBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.blue, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
+    uploadBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.blue, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, shadowColor: colors.blue, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 4 },
     uploadBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-    recordBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.danger, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
+    recordBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.danger, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, shadowColor: colors.danger, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 4 },
     recordBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
     tabs: { flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, backgroundColor: colors.cardAlt, borderRadius: 13, padding: 4, borderWidth: 1, borderColor: colors.border },
     tab: { flex: 1, paddingVertical: 9, borderRadius: 9, alignItems: 'center' },
     tabActive: { backgroundColor: colors.primary, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.18, shadowRadius: 4, elevation: 3 },
     tabText: { color: colors.textSec, fontSize: 12, fontWeight: '700', letterSpacing: 0.2 },
     tabTextActive: { color: '#04120B' },
-    videoCard: { marginHorizontal: 16, marginBottom: 14, backgroundColor: colors.card, borderRadius: 18, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
-    videoArea: { height: 200, backgroundColor: '#0A1A0F', justifyContent: 'center', alignItems: 'center', position: 'relative' },
+    videoCard: { marginHorizontal: 16, marginBottom: 14, backgroundColor: colors.card, borderRadius: 18, borderWidth: 1, borderColor: colors.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 },
+    videoArea: { height: 200, backgroundColor: '#0A1A0F', justifyContent: 'center', alignItems: 'center', position: 'relative', borderTopLeftRadius: 17, borderTopRightRadius: 17, overflow: 'hidden' },
     recPlayBtn: { width: 70, height: 70, borderRadius: 35, backgroundColor: 'rgba(0,0,0,0.55)', borderWidth: 2, borderColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center' },
     recSavedBadge: { position: 'absolute', top: 10, right: 12, flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
     recSavedText: { color: '#4ADE80', fontSize: 11, fontWeight: '600' },
@@ -1952,8 +1952,12 @@ function createStyles(colors: any) {
     scrubRail: { position: 'absolute', left: 0, right: 0, top: 8, height: 4, backgroundColor: colors.cardAlt, borderRadius: 2 },
     scrubFill: { position: 'absolute', left: 0, top: 8, height: 4, backgroundColor: colors.primary, borderRadius: 2 },
     scrubThumb: { position: 'absolute', top: 3, width: 14, height: 14, borderRadius: 7, backgroundColor: colors.primary },
-    sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginLeft: 16, marginTop: 16, marginBottom: 6 },
-    sectionSub: { fontSize: 12, color: colors.textSec, marginLeft: 16, marginBottom: 10 },
+    sectionTitle: {
+      fontSize: 11, fontWeight: '700', color: colors.textSec,
+      marginLeft: 20, marginTop: 18, marginBottom: 8,
+      textTransform: 'uppercase', letterSpacing: 1,
+    },
+    sectionSub: { fontSize: 12, color: colors.textSec, marginLeft: 20, marginBottom: 10 },
     realStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 16, gap: 8, marginBottom: 8 },
     realStatCard: {
       width: (width - 48) / 3,
@@ -2042,6 +2046,8 @@ function createStyles(colors: any) {
       backgroundColor: colors.card, borderRadius: 16,
       borderWidth: 1, borderColor: colors.border, borderLeftWidth: 4,
       flexDirection: 'row', alignItems: 'center', padding: 18, gap: 20,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06, shadowRadius: 8, elevation: 2,
     },
     matchScoreLeft: { alignItems: 'flex-start', gap: 8 },
     matchScoreNumRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },

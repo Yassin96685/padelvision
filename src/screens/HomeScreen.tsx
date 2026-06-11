@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Share, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../theme/ThemeContext';
 import { useMatches, StoredMatch } from '../store/MatchContext';
 import { useLocale, LEVEL_NAMES, DATE_LOCALE } from '../i18n/LocaleContext';
@@ -92,12 +93,19 @@ export default function HomeScreen({ navigation }: NavProps) {
             <Text style={s.emptyTitle}>{t('home.noSessionsTitle')}</Text>
             <Text style={s.emptySub}>{t('home.noSessionsSub')}</Text>
             <TouchableOpacity
-              style={s.emptyBtn}
+              style={s.emptyBtnWrap}
               onPress={() => navigation.navigate('Analysis', { startRecord: true })}
               activeOpacity={0.85}
             >
-              <Ionicons name="radio-button-on" size={18} color="#fff" />
-              <Text style={s.emptyBtnText}>{t('home.recordFirst')}</Text>
+              <LinearGradient
+                colors={['#FF6B5E', '#EF4444']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.emptyBtn}
+              >
+                <Ionicons name="radio-button-on" size={18} color="#fff" />
+                <Text style={s.emptyBtnText}>{t('home.recordFirst')}</Text>
+              </LinearGradient>
             </TouchableOpacity>
             <View style={s.featureGrid}>
               {[
@@ -212,6 +220,8 @@ function FlameStreakCard({ matchCount, colors, isDark, levelNames, sessionsToLev
       borderWidth: 1.5, borderColor: TIER_BORDER[t],
       flexDirection: 'row', alignItems: 'center',
       paddingVertical: 12, paddingHorizontal: 16,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08, shadowRadius: 8, elevation: 2,
     }}>
       <AnimatedFlame tier={tier} isDark={isDark} />
       <View style={{ flex: 1, marginLeft: 12 }}>
@@ -278,12 +288,15 @@ function createStyles(colors: any) {
       marginHorizontal: 16, marginBottom: 10,
       backgroundColor: colors.card, borderRadius: 18,
       borderWidth: 1, borderColor: colors.border,
-      overflow: 'hidden',
+      shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06, shadowRadius: 8, elevation: 2,
     },
     sessionThumb: {
       width: 96, height: 76,
       backgroundColor: '#0A2014',
       justifyContent: 'center', alignItems: 'center',
+      borderTopLeftRadius: 17, borderBottomLeftRadius: 17,
+      overflow: 'hidden',
     },
     courtCenterLine: {
       position: 'absolute', top: 0, bottom: 0, left: '50%',
@@ -319,12 +332,14 @@ function createStyles(colors: any) {
     },
     emptyTitle: { fontSize: 24, fontWeight: '800', color: colors.text, textAlign: 'center', marginBottom: 10, letterSpacing: -0.5 },
     emptySub: { fontSize: 15, color: colors.textSec, textAlign: 'center', lineHeight: 23, marginBottom: 28 },
+    emptyBtnWrap: {
+      borderRadius: 18, marginBottom: 36,
+      shadowColor: '#EF4444', shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.35, shadowRadius: 12, elevation: 8,
+    },
     emptyBtn: {
       flexDirection: 'row', alignItems: 'center', gap: 10,
       borderRadius: 18, paddingHorizontal: 32, paddingVertical: 18,
-      marginBottom: 36, backgroundColor: '#EF4444',
-      shadowColor: '#EF4444', shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.35, shadowRadius: 12, elevation: 8,
     },
     emptyBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
     featureGrid: { width: '100%', gap: 10 },

@@ -516,8 +516,13 @@ const s = StyleSheet.create({
   cta: {
     backgroundColor: C.primary, borderRadius: 14, paddingVertical: 16,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    shadowColor: C.primary, shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35, shadowRadius: 12, elevation: 6,
   },
-  ctaOff: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border },
+  ctaOff: {
+    backgroundColor: C.card, borderWidth: 1, borderColor: C.border,
+    shadowOpacity: 0, elevation: 0,
+  },
   ctaLabel: { fontSize: 17, fontWeight: '700', color: '#000', letterSpacing: 0.2 },
   ctaLabelOff: { color: C.textSec },
 });

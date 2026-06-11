@@ -158,6 +158,7 @@ export default function InsightsScreen() {
 
         {/* Performance Score card */}
         <View style={s.scoreCard}>
+          <View style={s.scoreCardClip}>
           <View style={[s.scoreAccent, { backgroundColor: scoreColor }]} />
           <View style={s.scoreCardInner}>
             <View style={s.scoreLeft}>
@@ -189,10 +190,11 @@ export default function InsightsScreen() {
               </Text>
             </View>
             <View style={s.scoreRightCol}>
-              <MiniStat label={t('stats.coverage')} value={`${selected.result.coverage}%`} color={colors.blue} />
-              <MiniStat label={t('insights.errorRate')} value={`${selected.result.errorRate}%`} color={colors.danger} />
-              <MiniStat label={t('analysis.avgRally')} value={selected.result.avgRally} color={colors.purple} />
+              <MiniStat label={t('stats.coverage')} value={`${selected.result.coverage}%`} color={colors.blue} labelColor={colors.textSec} />
+              <MiniStat label={t('insights.errorRate')} value={`${selected.result.errorRate}%`} color={colors.danger} labelColor={colors.textSec} />
+              <MiniStat label={t('analysis.avgRally')} value={selected.result.avgRally} color={colors.purple} labelColor={colors.textSec} />
             </View>
+          </View>
           </View>
         </View>
 
@@ -358,11 +360,11 @@ export default function InsightsScreen() {
   );
 }
 
-function MiniStat({ label, value, color }: { label: string; value: string; color: string }) {
+function MiniStat({ label, value, color, labelColor }: { label: string; value: string; color: string; labelColor: string }) {
   return (
     <View style={{ alignItems: 'center', gap: 3 }}>
-      <Text style={{ color, fontSize: 20, fontWeight: '800' }}>{value}</Text>
-      <Text style={{ color: '#8B95A6', fontSize: 10, textAlign: 'center' }}>{label}</Text>
+      <Text style={{ color, fontSize: 20, fontWeight: '800', letterSpacing: -0.3 }}>{value}</Text>
+      <Text style={{ color: labelColor, fontSize: 10, fontWeight: '600', textAlign: 'center' }}>{label}</Text>
     </View>
   );
 }
@@ -402,8 +404,10 @@ function createStyles(colors: any) {
       marginHorizontal: 16, marginBottom: 4,
       backgroundColor: colors.card, borderRadius: 20,
       borderWidth: 1, borderColor: colors.border,
-      overflow: 'hidden', flexDirection: 'row',
+      shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06, shadowRadius: 8, elevation: 2,
     },
+    scoreCardClip: { borderRadius: 19, overflow: 'hidden', flexDirection: 'row' },
     scoreAccent: { width: 4 },
     scoreCardInner: { flex: 1, flexDirection: 'row', alignItems: 'center', padding: 20, gap: 16 },
     scoreLeft: { flex: 1 },

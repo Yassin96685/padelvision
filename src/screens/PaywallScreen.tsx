@@ -198,15 +198,22 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
           {/* Sticky Footer */}
           <View style={s.footer}>
             <TouchableOpacity
-              style={[s.cta, (loading || packagesLoading) && { opacity: 0.7 }]}
+              style={[s.ctaWrap, (loading || packagesLoading) && { opacity: 0.7 }]}
               onPress={handleSubscribe}
               activeOpacity={0.85}
               disabled={loading || packagesLoading}
             >
-              {loading || packagesLoading
-                ? <ActivityIndicator color="#000" />
-                : <Text style={s.ctaLabel}>{t('paywall.cta')}</Text>
-              }
+              <LinearGradient
+                colors={['#00E87D', '#00C9A0']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.cta}
+              >
+                {loading || packagesLoading
+                  ? <ActivityIndicator color="#04120B" />
+                  : <Text style={s.ctaLabel}>{t('paywall.cta')}</Text>
+                }
+              </LinearGradient>
             </TouchableOpacity>
             <View style={s.appleRow}>
               <Ionicons name="lock-closed" size={11} color={C.textSec} />
@@ -243,6 +250,9 @@ const s = StyleSheet.create({
   logoWrap: {
     width: 80, height: 80, borderRadius: 20,
     overflow: 'hidden', marginBottom: 20,
+    borderWidth: 1, borderColor: C.border,
+    shadowColor: C.primary, shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
   },
   logo: { width: '100%', height: '100%' },
   trialBadge: {
@@ -302,11 +312,16 @@ const s = StyleSheet.create({
     paddingHorizontal: 22, paddingBottom: 30, paddingTop: 14,
     borderTopWidth: 1, borderTopColor: C.border,
   },
-  cta: {
-    backgroundColor: C.primary, borderRadius: 16,
-    paddingVertical: 17, alignItems: 'center', marginBottom: 10,
+  ctaWrap: {
+    borderRadius: 16, marginBottom: 10,
+    shadowColor: C.primary, shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35, shadowRadius: 12, elevation: 6,
   },
-  ctaLabel: { fontSize: 15, fontWeight: '800', color: '#000', letterSpacing: 0.3 },
+  cta: {
+    borderRadius: 16,
+    paddingVertical: 17, alignItems: 'center',
+  },
+  ctaLabel: { fontSize: 15, fontWeight: '800', color: '#04120B', letterSpacing: 0.3 },
   appleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, marginBottom: 8 },
   appleTxt: { fontSize: 11, color: C.textSec },
   legal: { fontSize: 11, color: C.textSec, textAlign: 'center', lineHeight: 16 },

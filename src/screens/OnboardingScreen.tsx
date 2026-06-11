@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as WebBrowser from 'expo-web-browser';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -239,11 +240,17 @@ export default function OnboardingScreen() {
         >
           {/* Logo */}
           <View style={{ alignItems: 'center', marginBottom: 28, marginTop: 8 }}>
-            <Image
-              source={require('../../assets/logo.png')}
-              style={{ width: 100, height: 100, borderRadius: 24, marginBottom: 16 }}
-              resizeMode="cover"
-            />
+            <View style={{
+              borderRadius: 24, marginBottom: 16,
+              shadowColor: colors.primary, shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.3, shadowRadius: 20, elevation: 10,
+            }}>
+              <Image
+                source={require('../../assets/logo.png')}
+                style={{ width: 100, height: 100, borderRadius: 24 }}
+                resizeMode="cover"
+              />
+            </View>
             <Text style={{ fontSize: 30, fontWeight: '900', color: colors.text, letterSpacing: -0.8 }}>
               PadelVision
             </Text>
@@ -371,23 +378,33 @@ export default function OnboardingScreen() {
             {/* Submit button */}
             <TouchableOpacity
               style={{
-                backgroundColor: loading ? colors.primaryDim : colors.primary,
-                borderRadius: 16,
-                paddingVertical: 17,
-                alignItems: 'center',
-                marginTop: 4,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                gap: 8,
+                borderRadius: 16, marginTop: 4,
+                shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,
+                opacity: loading ? 0.75 : 1,
               }}
               onPress={submit}
               activeOpacity={0.82}
               disabled={loading}
             >
-              {loading && <ActivityIndicator size="small" color="#0C1C0C" />}
-              <Text style={{ color: '#0C1C0C', fontSize: 17, fontWeight: '800' }}>
-                {t(mode === 'register' ? 'onboarding.getStarted' : mode === 'login' ? 'onboarding.loginBtn' : 'onboarding.resetBtn')}
-              </Text>
+              <LinearGradient
+                colors={['#00E87D', '#00C9A0']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  borderRadius: 16,
+                  paddingVertical: 17,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                {loading && <ActivityIndicator size="small" color="#04120B" />}
+                <Text style={{ color: '#04120B', fontSize: 17, fontWeight: '800' }}>
+                  {t(mode === 'register' ? 'onboarding.getStarted' : mode === 'login' ? 'onboarding.loginBtn' : 'onboarding.resetBtn')}
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
 
             {/* Forgot password link — only on login */}
