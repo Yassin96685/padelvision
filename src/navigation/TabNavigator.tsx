@@ -34,8 +34,8 @@ function Tabs() {
           paddingBottom: insets.bottom || 10,
         },
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: '#4B5563',
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '600' as const, marginTop: 2 },
+        tabBarInactiveTintColor: colors.textSec,
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700' as const, marginTop: 2, letterSpacing: 0.2 },
       }}
     >
       <Tab.Screen

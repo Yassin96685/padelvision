@@ -760,11 +760,11 @@ function createStyles(colors: any) {
       justifyContent: 'center', alignItems: 'center',
     },
 
-    tabs: { flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, backgroundColor: colors.cardAlt, borderRadius: 12, padding: 4 },
-    tab: { flex: 1, paddingVertical: 8, borderRadius: 9, alignItems: 'center' },
-    tabActive: { backgroundColor: colors.primary },
-    tabText: { color: colors.textSec, fontSize: 12, fontWeight: '600' },
-    tabTextActive: { color: '#fff' },
+    tabs: { flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, backgroundColor: colors.cardAlt, borderRadius: 13, padding: 4, borderWidth: 1, borderColor: colors.border },
+    tab: { flex: 1, paddingVertical: 9, borderRadius: 9, alignItems: 'center' },
+    tabActive: { backgroundColor: colors.primary, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.18, shadowRadius: 4, elevation: 3 },
+    tabText: { color: colors.textSec, fontSize: 12, fontWeight: '700', letterSpacing: 0.2 },
+    tabTextActive: { color: '#04120B' },
 
     overviewRow: { flexDirection: 'row', marginHorizontal: 16, gap: 8, marginBottom: 8 },
     ovCard: { flex: 1, backgroundColor: colors.card, borderRadius: 14, padding: 14, alignItems: 'center', borderWidth: 1 },

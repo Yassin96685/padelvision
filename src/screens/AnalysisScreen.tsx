@@ -1253,6 +1253,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
       <Modal visible={showPositionPicker} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={[s.modalCard, { paddingBottom: insets.bottom + 16 }]}>
+            <View style={s.modalHandle} />
             <Text style={s.modalTitle}>{t('position.title')}</Text>
             <Text style={[s.modalBody, { marginBottom: 20 }]}>{t('position.subtitle')}</Text>
 
@@ -1309,6 +1310,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
             <View style={s.modalOverlay}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
 
             {modalState === 'checklist' && (
               <>
@@ -1922,11 +1924,11 @@ function createStyles(colors: any) {
     uploadBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
     recordBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.danger, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
     recordBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-    tabs: { flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, backgroundColor: colors.cardAlt, borderRadius: 12, padding: 4 },
-    tab: { flex: 1, paddingVertical: 8, borderRadius: 9, alignItems: 'center' },
-    tabActive: { backgroundColor: colors.primary },
-    tabText: { color: colors.textSec, fontSize: 12, fontWeight: '600' },
-    tabTextActive: { color: '#fff' },
+    tabs: { flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, backgroundColor: colors.cardAlt, borderRadius: 13, padding: 4, borderWidth: 1, borderColor: colors.border },
+    tab: { flex: 1, paddingVertical: 9, borderRadius: 9, alignItems: 'center' },
+    tabActive: { backgroundColor: colors.primary, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.18, shadowRadius: 4, elevation: 3 },
+    tabText: { color: colors.textSec, fontSize: 12, fontWeight: '700', letterSpacing: 0.2 },
+    tabTextActive: { color: '#04120B' },
     videoCard: { marginHorizontal: 16, marginBottom: 14, backgroundColor: colors.card, borderRadius: 18, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
     videoArea: { height: 200, backgroundColor: '#0A1A0F', justifyContent: 'center', alignItems: 'center', position: 'relative' },
     recPlayBtn: { width: 70, height: 70, borderRadius: 35, backgroundColor: 'rgba(0,0,0,0.55)', borderWidth: 2, borderColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center' },
@@ -2071,8 +2073,9 @@ function createStyles(colors: any) {
     opponentInput: { flex: 1, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, fontWeight: '500' },
 
     // Bottom-sheet modal
-    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
-    modalCard: { backgroundColor: colors.card, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 },
+    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'flex-end' },
+    modalCard: { backgroundColor: colors.card, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingTop: 12, paddingBottom: 40 },
+    modalHandle: { alignSelf: 'center', width: 36, height: 4, borderRadius: 2, backgroundColor: colors.border, marginBottom: 16 },
     modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
     modalTitle: { fontSize: 20, fontWeight: '800', color: colors.text },
     modalBody: { color: colors.textSec, fontSize: 14, marginBottom: 14 },

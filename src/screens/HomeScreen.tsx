@@ -43,7 +43,12 @@ export default function HomeScreen({ navigation }: NavProps) {
 
         {/* Header */}
         <View style={s.header}>
-          <Text style={s.headerTitle}>{t('home.title')}</Text>
+          <View>
+            <Text style={s.headerEyebrow}>
+              {new Date().toLocaleDateString(DATE_LOCALE[locale], { weekday: 'long', day: 'numeric', month: 'long' })}
+            </Text>
+            <Text style={s.headerTitle}>{t('home.title')}</Text>
+          </View>
           <TouchableOpacity onPress={handleShare} activeOpacity={0.7} style={s.shareBtn}>
             <Ionicons name="share-outline" size={21} color={colors.text} />
           </TouchableOpacity>
@@ -172,7 +177,9 @@ function SessionCard({ match, index, total, navigation, colors, s, dateLocale, s
 function SummaryCard({ icon, label, value, color, colors, s }: any) {
   return (
     <View style={s.summaryCard}>
-      <Ionicons name={icon as any} size={15} color={color} />
+      <View style={[s.summaryIcon, { backgroundColor: color + '16' }]}>
+        <Ionicons name={icon as any} size={14} color={color} />
+      </View>
       <Text style={[s.summaryValue, { color }]}>{value}</Text>
       <Text style={s.summaryLabel}>{label}</Text>
     </View>
@@ -216,8 +223,8 @@ function FlameStreakCard({ matchCount, colors, isDark, levelNames, sessionsToLev
           {label}
         </Text>
         <View style={{ marginTop: 8, gap: 3 }}>
-          <View style={{ height: 3, backgroundColor: 'rgba(128,128,128,0.15)', borderRadius: 2, overflow: 'hidden' }}>
-            <View style={{ height: 3, width: `${Math.round(prog * 100)}%` as any, backgroundColor: lColor, borderRadius: 2 }} />
+          <View style={{ height: 4, backgroundColor: 'rgba(128,128,128,0.15)', borderRadius: 2, overflow: 'hidden' }}>
+            <View style={{ height: 4, width: `${Math.round(prog * 100)}%` as any, backgroundColor: lColor, borderRadius: 2 }} />
           </View>
           <Text style={{ fontSize: 10, fontWeight: '600', color: lColor + 'AA' }}>
             {nextT - matchCount} {sessionsToLevel} {level + 1}
@@ -238,6 +245,10 @@ function createStyles(colors: any) {
       flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
       paddingHorizontal: 20, paddingTop: 14, paddingBottom: 18,
     },
+    headerEyebrow: {
+      fontSize: 11, fontWeight: '700', color: colors.textSec,
+      textTransform: 'uppercase', letterSpacing: 1.1, marginBottom: 3,
+    },
     headerTitle: { fontSize: 34, fontWeight: '800', color: colors.text, letterSpacing: -1 },
     shareBtn: {
       width: 40, height: 40, borderRadius: 12,
@@ -247,10 +258,14 @@ function createStyles(colors: any) {
 
     statsRow: { flexDirection: 'row', paddingHorizontal: 16, gap: 8, marginBottom: 24 },
     summaryCard: {
-      flex: 1, backgroundColor: colors.card, borderRadius: 14, padding: 12,
-      alignItems: 'center', gap: 5, borderWidth: 1, borderColor: colors.border,
+      flex: 1, backgroundColor: colors.card, borderRadius: 16, paddingVertical: 14, paddingHorizontal: 6,
+      alignItems: 'center', gap: 6, borderWidth: 1, borderColor: colors.border,
     },
-    summaryValue: { fontSize: 18, fontWeight: '800' },
+    summaryIcon: {
+      width: 28, height: 28, borderRadius: 9,
+      justifyContent: 'center', alignItems: 'center',
+    },
+    summaryValue: { fontSize: 19, fontWeight: '800', letterSpacing: -0.3 },
     summaryLabel: { color: colors.textSec, fontSize: 10, fontWeight: '600' },
 
     sectionLabel: {

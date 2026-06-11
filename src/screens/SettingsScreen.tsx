@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../theme/ThemeContext';
 import { useMatches } from '../store/MatchContext';
 import { useLocale, LANGUAGE_OPTIONS } from '../i18n/LocaleContext';
@@ -253,14 +254,21 @@ export default function SettingsScreen({ navigation }: any) {
 
         {/* Pro Banner — only shown when not yet pro */}
         {!isPro && (
-          <TouchableOpacity style={s.proBanner} onPress={() => navigation.navigate('Paywall')} activeOpacity={0.85}>
-            <View style={s.proLeft}>
-              <Text style={s.proTitle}>PadelVision Pro</Text>
-              <Text style={s.proSub}>KI-Analyse · Shot Timeline · Unbegrenzte Matches</Text>
-            </View>
-            <View style={s.proArrow}>
-              <Ionicons name="arrow-forward" size={18} color="#000" />
-            </View>
+          <TouchableOpacity style={s.proBannerWrap} onPress={() => navigation.navigate('Paywall')} activeOpacity={0.85}>
+            <LinearGradient
+              colors={['#00E87D', '#00C9A0']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={s.proBanner}
+            >
+              <View style={s.proLeft}>
+                <Text style={s.proTitle}>PadelVision Pro</Text>
+                <Text style={s.proSub}>KI-Analyse · Shot Timeline · Unbegrenzte Matches</Text>
+              </View>
+              <View style={s.proArrow}>
+                <Ionicons name="arrow-forward" size={18} color="#000" />
+              </View>
+            </LinearGradient>
           </TouchableOpacity>
         )}
 
@@ -356,6 +364,7 @@ export default function SettingsScreen({ navigation }: any) {
       <Modal visible={profileModal} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{t('settings.editProfile')}</Text>
               <TouchableOpacity onPress={() => setProfileModal(false)}>
@@ -414,6 +423,7 @@ export default function SettingsScreen({ navigation }: any) {
       <Modal visible={qualityModal} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{t('settings.videoQualityTitle')}</Text>
               <TouchableOpacity onPress={() => setQualityModal(false)}>
@@ -437,6 +447,7 @@ export default function SettingsScreen({ navigation }: any) {
       <Modal visible={policyModal !== null} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{policyModal === 'privacy' ? t('settings.privacyPolicyTitle') : t('settings.termsTitle')}</Text>
               <TouchableOpacity onPress={() => setPolicyModal(null)}>
@@ -451,6 +462,7 @@ export default function SettingsScreen({ navigation }: any) {
       <Modal visible={passwordModal} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>Passwort ändern</Text>
               <TouchableOpacity onPress={() => setPasswordModal(false)}>
@@ -502,6 +514,7 @@ export default function SettingsScreen({ navigation }: any) {
       <Modal visible={languageModal} transparent animationType="slide">
         <View style={s.modalOverlay}>
           <View style={s.modalCard}>
+            <View style={s.modalHandle} />
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>{t('settings.selectLanguage')}</Text>
               <TouchableOpacity onPress={() => setLanguageModal(false)}>
@@ -586,7 +599,11 @@ function createStyles(colors: any) {
     settingValue: { color: colors.textSec, fontSize: 13 },
     divider: { height: 1, backgroundColor: colors.border, marginLeft: 62 },
 
-    proBanner: { marginHorizontal: 16, marginTop: 8, marginBottom: 8, backgroundColor: '#00E87D', borderRadius: 18, padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    proBannerWrap: {
+      marginHorizontal: 16, marginTop: 8, marginBottom: 8, borderRadius: 18, overflow: 'hidden',
+      shadowColor: '#00E87D', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
+    },
+    proBanner: { padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     proLeft: { flex: 1 },
     proTitle: { color: '#000', fontWeight: '800', fontSize: 17, marginBottom: 3 },
     proSub: { color: '#00000088', fontSize: 12, fontWeight: '600' },
@@ -595,8 +612,9 @@ function createStyles(colors: any) {
     signOutBtn: { marginHorizontal: 16, marginTop: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderWidth: 1, borderRadius: 14, padding: 14 },
     signOutText: { fontWeight: '700', fontSize: 15 },
 
-    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
-    modalCard: { backgroundColor: colors.card, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 },
+    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'flex-end' },
+    modalCard: { backgroundColor: colors.card, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingTop: 12, paddingBottom: 40 },
+    modalHandle: { alignSelf: 'center', width: 36, height: 4, borderRadius: 2, backgroundColor: colors.border, marginBottom: 16 },
     modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
     modalTitle: { fontSize: 20, fontWeight: '800', color: colors.text },
     modalBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, padding: 16, marginTop: 20 },

@@ -60,12 +60,8 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
           yearly:  offering.annual    ?? offering.availablePackages.find(p => p.identifier === 'yearly')  ?? null,
           monthly: offering.monthly   ?? offering.availablePackages.find(p => p.identifier === 'monthly') ?? null,
         });
-      } else {
-        Alert.alert('Debug', 'getOfferings returned null — no offering available');
       }
-    }).catch((e: any) => {
-      Alert.alert('Debug Error', e?.message ?? JSON.stringify(e) ?? 'unknown error');
-    }).finally(() => setPackagesLoading(false));
+    }).catch(() => {}).finally(() => setPackagesLoading(false));
   }, []);
 
   const handleSubscribe = async () => {
