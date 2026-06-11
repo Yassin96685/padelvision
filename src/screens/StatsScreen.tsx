@@ -205,7 +205,7 @@ export default function StatsScreen({ navigation }: { navigation: any }) {
             ))}
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
             {/* ── Shots Tab ── */}
             {tab === 0 && (
               <View>

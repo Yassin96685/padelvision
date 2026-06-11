@@ -850,7 +850,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
         ))}
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
 
         {tab === 0 && (
           <View>

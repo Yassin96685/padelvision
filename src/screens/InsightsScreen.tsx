@@ -117,7 +117,7 @@ export default function InsightsScreen() {
 
   return (
     <SafeAreaView style={s.safe}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
 
         {/* Header */}
         <View style={s.header}>

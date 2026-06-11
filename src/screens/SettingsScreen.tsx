@@ -205,7 +205,7 @@ export default function SettingsScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={s.safe}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
 
         <View style={s.header}>
           <Text style={s.title}>{t('settings.title')}</Text>
