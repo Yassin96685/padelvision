@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeContext';
 import { useMatches, StoredMatch } from '../store/MatchContext';
-import { useLocale, DAY_LABELS, POSITIONS_BY_LOCALE } from '../i18n/LocaleContext';
+import { useLocale, DAY_LABELS, POSITIONS_BY_LOCALE, LocaleCode } from '../i18n/LocaleContext';
 import { AnimatedFlame } from '../components/AnimatedFlame';
 
 const { width } = Dimensions.get('window');
@@ -277,7 +277,7 @@ export default function StatsScreen({ navigation }: { navigation: any }) {
                 <Text style={s.sectionTitle}>{t('stats.heatmapTitle')}</Text>
 
                 {/* Heatmap */}
-                <HeatmapCourt s={s} width={width} colors={colors} matchHeatmap={matchHeatmap} playerPosition={selectedHeatMatch?.playerPosition} />
+                <HeatmapCourt s={s} width={width} colors={colors} matchHeatmap={matchHeatmap} playerPosition={selectedHeatMatch?.playerPosition} locale={locale} />
 
                 {/* Color legend */}
                 <View style={s.heatLegend}>
@@ -436,11 +436,11 @@ function StreakCard({ matches, colors, s, dayLabels, t, isDark }: { matches: Sto
 
 function heatColor(v: number): string {
   if (v < 0.12) return 'transparent';
-  // Orange → red only
+  // Yellow → orange → red (classic heat ramp, reads well on blue court)
   const stops: [number, [number, number, number]][] = [
-    [0.00, [255, 140,   0]],
-    [0.50, [255,  60,   0]],
-    [1.00, [200,  10,   0]],
+    [0.00, [255, 205,  40]],
+    [0.45, [255, 115,  20]],
+    [1.00, [205,  25,  20]],
   ];
   let i = 0;
   while (i < stops.length - 2 && v > stops[i + 1][0]) i++;
@@ -552,8 +552,15 @@ function buildHeatmapFromMatch(
   return blurred.map(row => row.map(v => Math.max(0, Math.min(1, v / max))));
 }
 
-function HeatmapCourt({ s, width: w, colors, matchHeatmap, playerPosition }: {
-  s: any; width: number; colors: any; matchHeatmap: number[][]; playerPosition?: string;
+const HEAT_LABELS: Record<LocaleCode, { opp: string; you: string }> = {
+  en: { opp: 'OPPONENTS', you: 'YOU' },
+  de: { opp: 'GEGNER', you: 'DU' },
+  es: { opp: 'RIVALES', you: 'TÚ' },
+  fr: { opp: 'ADVERSAIRES', you: 'TOI' },
+};
+
+function HeatmapCourt({ s, width: w, colors, matchHeatmap, playerPosition, locale }: {
+  s: any; width: number; colors: any; matchHeatmap: number[][]; playerPosition?: string; locale: LocaleCode;
 }) {
   const cw = w - 32;
   const courtH = cw * 1.55;
@@ -563,9 +570,9 @@ function HeatmapCourt({ s, width: w, colors, matchHeatmap, playerPosition }: {
   const cellW = cw / COLS;
   const cellH = courtH / ROWS;
 
-  const LINE     = 'rgba(255,255,255,0.45)';
-  const LINE_DIM = 'rgba(255,255,255,0.18)';
-
+  // Painted court lines (real padel: service lines 6.95m from net on a 20m court = 34.75%)
+  const LINE = 'rgba(255,255,255,0.9)';
+  const lbl = HEAT_LABELS[locale] ?? HEAT_LABELS.en;
   const dotCenter = playerPosition ? POSITION_CENTER[playerPosition] : null;
 
   return (
@@ -587,25 +594,28 @@ function HeatmapCourt({ s, width: w, colors, matchHeatmap, playerPosition }: {
         ))
       )}
 
-      {/* Outer border */}
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, backgroundColor: LINE }} />
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, backgroundColor: LINE }} />
-      <View style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: 2, backgroundColor: LINE }} />
-      <View style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: 2, backgroundColor: LINE }} />
+      {/* Service lines (top: opponents' half, bottom: your half) */}
+      <View style={{ position: 'absolute', top: '15.25%', left: 0, right: 0, height: 2, backgroundColor: LINE }} />
+      <View style={{ position: 'absolute', top: '84.75%', left: 0, right: 0, height: 2, backgroundColor: LINE }} />
 
-      {/* Physical net — bold line at 50% */}
-      <View style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 4, backgroundColor: 'rgba(255,255,255,0.75)', marginTop: -2 }} />
+      {/* Center service line — connects both service lines through the middle */}
+      <View style={{ position: 'absolute', top: '15.25%', bottom: '15.25%', left: '50%', width: 2, marginLeft: -1, backgroundColor: LINE }} />
 
+      {/* Net — dark band with white tape on top + posts */}
+      <View style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 7, marginTop: -3.5, backgroundColor: 'rgba(6,10,18,0.82)' }} />
+      <View style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 2, marginTop: -3.5, backgroundColor: 'rgba(255,255,255,0.95)' }} />
+      <View style={{ position: 'absolute', top: '50%', left: 0, width: 5, height: 16, marginTop: -8, borderTopRightRadius: 3, borderBottomRightRadius: 3, backgroundColor: 'rgba(235,242,255,0.9)' }} />
+      <View style={{ position: 'absolute', top: '50%', right: 0, width: 5, height: 16, marginTop: -8, borderTopLeftRadius: 3, borderBottomLeftRadius: 3, backgroundColor: 'rgba(235,242,255,0.9)' }} />
 
-      {/* Zone labels */}
-      <Text style={{ position: 'absolute', top: '4%', alignSelf: 'center', color: 'rgba(255,255,255,0.22)', fontSize: 9, fontWeight: '700', letterSpacing: 3 }}>
-        GEGNER
+      {/* Glass wall inner highlight */}
+      <View pointerEvents="none" style={{ ...StyleSheet.absoluteFillObject, borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' }} />
+
+      {/* Zone labels — localized */}
+      <Text style={{ position: 'absolute', top: '3.5%', alignSelf: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 9, fontWeight: '800', letterSpacing: 3 }}>
+        {lbl.opp}
       </Text>
-      <Text style={{ position: 'absolute', top: '47%', alignSelf: 'center', color: 'rgba(255,255,255,0.55)', fontSize: 8, fontWeight: '800', letterSpacing: 4, marginTop: -14 }}>
-        NET
-      </Text>
-      <Text style={{ position: 'absolute', top: '78%', alignSelf: 'center', color: 'rgba(255,255,255,0.22)', fontSize: 9, fontWeight: '700', letterSpacing: 4 }}>
-        DU
+      <Text style={{ position: 'absolute', bottom: '3%', alignSelf: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 9, fontWeight: '800', letterSpacing: 3 }}>
+        {lbl.you}
       </Text>
 
       {/* Player position dot */}
@@ -619,6 +629,8 @@ function HeatmapCourt({ s, width: w, colors, matchHeatmap, playerPosition }: {
             backgroundColor: 'rgba(0,232,125,0.95)',
             borderWidth: 2.5, borderColor: '#fff',
             zIndex: 10,
+            shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.4, shadowRadius: 4, elevation: 4,
           }}
         />
       )}
@@ -689,12 +701,12 @@ function CourtDiagram({ s, colors, width: w, zonePercents }: { s: any; colors: a
               bottom: z.bottom as any,
               width: z.width,
               height: z.height,
-              backgroundColor: colors.primary + '28',
-              borderColor: colors.primary + '55',
+              backgroundColor: 'rgba(255,255,255,0.14)',
+              borderColor: 'rgba(255,255,255,0.4)',
             },
           ]}
         >
-          <Text style={[s.zoneVal, { color: colors.primary }]}>{z.label}</Text>
+          <Text style={[s.zoneVal, { color: '#FFFFFF' }]}>{z.label}</Text>
           <Text style={s.zoneLabel}>{z.zone}</Text>
         </View>
       ))}
@@ -789,8 +801,8 @@ function createStyles(colors: any) {
     shotDetail: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border },
     shotDetailRow: { flexDirection: 'row' },
 
-    // Heatmap
-    heatCourt: { marginHorizontal: 16, backgroundColor: '#050F08', borderRadius: 16, overflow: 'hidden', borderWidth: 1.5, borderColor: '#1A3A22', marginBottom: 12 },
+    // Heatmap — padel court blue with glass-wall border
+    heatCourt: { marginHorizontal: 16, backgroundColor: '#0F5FAD', borderRadius: 16, overflow: 'hidden', borderWidth: 2, borderColor: 'rgba(180,215,255,0.38)', marginBottom: 12 },
     heatNet: { position: 'absolute', top: '50%', left: 0, right: 0, height: 2, backgroundColor: 'rgba(255,255,255,0.3)' },
     heatCenter: { position: 'absolute', top: 0, bottom: 0, left: '50%', width: 1, backgroundColor: 'rgba(255,255,255,0.15)' },
     playerDot: { position: 'absolute', width: 22, height: 22, borderRadius: 11, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' },
@@ -823,12 +835,12 @@ function createStyles(colors: any) {
     posPct: { fontWeight: '700', fontSize: 15 },
     posTrack: { height: 6, backgroundColor: colors.cardAlt, borderRadius: 3, overflow: 'hidden' },
     posFill: { height: 6, borderRadius: 3 },
-    courtDiag: { marginHorizontal: 16, backgroundColor: '#0D2B18', borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: '#1A4A2A', marginBottom: 8 },
-    courtDiagNet: { position: 'absolute', top: '50%', left: 0, right: 0, height: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
-    courtDiagCenter: { position: 'absolute', top: 0, bottom: 0, left: '50%', width: 1, backgroundColor: 'rgba(255,255,255,0.2)' },
+    courtDiag: { marginHorizontal: 16, backgroundColor: '#0F5FAD', borderRadius: 14, overflow: 'hidden', borderWidth: 2, borderColor: 'rgba(180,215,255,0.38)', marginBottom: 8 },
+    courtDiagNet: { position: 'absolute', top: '50%', left: 0, right: 0, height: 2, backgroundColor: 'rgba(255,255,255,0.85)' },
+    courtDiagCenter: { position: 'absolute', top: 0, bottom: 0, left: '50%', width: 2, backgroundColor: 'rgba(255,255,255,0.45)' },
     courtZone: { position: 'absolute', borderRadius: 6, borderWidth: 1, justifyContent: 'center', alignItems: 'center' },
     zoneVal: { fontSize: 16, fontWeight: '800' },
-    zoneLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
+    zoneLabel: { color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: '600' },
     insight: { flexDirection: 'row', marginHorizontal: 16, marginTop: 8, backgroundColor: colors.primaryDim, borderRadius: 12, padding: 14, gap: 10, alignItems: 'flex-start' },
     insightText: { flex: 1, fontSize: 13, lineHeight: 20 },
 

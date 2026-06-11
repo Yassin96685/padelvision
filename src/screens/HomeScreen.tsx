@@ -293,7 +293,7 @@ function createStyles(colors: any) {
     },
     sessionThumb: {
       width: 96, height: 76,
-      backgroundColor: '#0A2014',
+      backgroundColor: '#0F5FAD',
       justifyContent: 'center', alignItems: 'center',
       borderTopLeftRadius: 17, borderBottomLeftRadius: 17,
       overflow: 'hidden',

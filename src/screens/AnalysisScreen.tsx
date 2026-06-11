@@ -129,6 +129,102 @@ const ERROR_POOL_BY_LOCALE: Record<LocaleCode, Omit<ErrorEntry, 'id'>[]> = {
   ],
 };
 
+type PhonePosI18n = { name: string; short: string; description: string; pros: string[]; cons: string[] };
+const PHONE_POS_I18N: Record<LocaleCode, Record<string, PhonePosI18n>> = {
+  en: {
+    '1': {
+      name: 'Center Baseline (Best)',
+      short: 'Center',
+      description: 'Place at center of back fence, 2.5m height. Full court view capturing both players and glass rebounds.',
+      pros: ['Full court coverage', 'Both players always visible', 'Glass rebounds captured'],
+      cons: ['Needs tripod or fence clip mount'],
+    },
+    '2': {
+      name: 'Corner Diagonal',
+      short: 'Corner',
+      description: 'Diagonal from corner at 2m height. Great 3D perspective showing court depth and player positioning.',
+      pros: ['Depth perception', 'Unique angle for positioning analysis'],
+      cons: ['Opposite corner has small blind spot'],
+    },
+    '3': {
+      name: 'Side Fence Mid',
+      short: 'Side',
+      description: 'Halfway along the side fence at 2m height. Best for analyzing lateral movement and cross-court exchanges.',
+      pros: ['Clear lateral movement tracking', 'Ideal for glass play analysis'],
+      cons: ['Net post can block near player', 'Misses far side details'],
+    },
+  },
+  de: {
+    '1': {
+      name: 'Mitte Hinterzaun (Beste)',
+      short: 'Mitte',
+      description: 'Mittig am hinteren Zaun in 2,5 m Höhe anbringen. Volle Sicht aufs Feld — beide Spieler und Glas-Rebounds im Bild.',
+      pros: ['Komplette Feldabdeckung', 'Beide Spieler immer sichtbar', 'Glas-Rebounds im Bild'],
+      cons: ['Stativ oder Zaunhalterung nötig'],
+    },
+    '2': {
+      name: 'Ecke Diagonal',
+      short: 'Ecke',
+      description: 'Diagonal aus der Ecke in 2 m Höhe. Starke 3D-Perspektive für Feldtiefe und Spielerpositionen.',
+      pros: ['Gute Tiefenwirkung', 'Einzigartiger Winkel für Positionsanalyse'],
+      cons: ['Kleiner toter Winkel in der Gegenecke'],
+    },
+    '3': {
+      name: 'Seitenzaun Mitte',
+      short: 'Seite',
+      description: 'Auf halber Länge des Seitenzauns in 2 m Höhe. Ideal für Seitwärtsbewegung und Cross-Schläge.',
+      pros: ['Seitliche Bewegungen klar erkennbar', 'Ideal für Glas-Analyse'],
+      cons: ['Netzpfosten kann nahen Spieler verdecken', 'Details der Gegenseite fehlen'],
+    },
+  },
+  es: {
+    '1': {
+      name: 'Centro Fondo (Mejor)',
+      short: 'Centro',
+      description: 'Coloca en el centro de la valla trasera, a 2,5 m de altura. Vista completa de la pista con ambos jugadores y rebotes en el cristal.',
+      pros: ['Cobertura total de la pista', 'Ambos jugadores siempre visibles', 'Rebotes en cristal capturados'],
+      cons: ['Requiere trípode o soporte de valla'],
+    },
+    '2': {
+      name: 'Esquina Diagonal',
+      short: 'Esquina',
+      description: 'En diagonal desde la esquina a 2 m de altura. Gran perspectiva 3D de profundidad y posicionamiento.',
+      pros: ['Percepción de profundidad', 'Ángulo único para análisis de posición'],
+      cons: ['Pequeño punto ciego en la esquina opuesta'],
+    },
+    '3': {
+      name: 'Valla Lateral Media',
+      short: 'Lateral',
+      description: 'A mitad de la valla lateral, a 2 m de altura. Ideal para movimiento lateral e intercambios cruzados.',
+      pros: ['Seguimiento claro del movimiento lateral', 'Ideal para análisis del juego con cristal'],
+      cons: ['El poste de la red puede tapar al jugador cercano', 'Pierde detalles del lado lejano'],
+    },
+  },
+  fr: {
+    '1': {
+      name: 'Centre Fond (Meilleur)',
+      short: 'Centre',
+      description: 'Placez au centre du grillage arrière, à 2,5 m de hauteur. Vue complète du terrain avec les deux joueurs et les rebonds sur la vitre.',
+      pros: ['Couverture totale du terrain', 'Les deux joueurs toujours visibles', 'Rebonds sur vitre capturés'],
+      cons: ['Trépied ou fixation grillage nécessaire'],
+    },
+    '2': {
+      name: 'Coin Diagonal',
+      short: 'Coin',
+      description: 'En diagonale depuis le coin à 2 m de hauteur. Belle perspective 3D pour la profondeur et le placement.',
+      pros: ['Perception de la profondeur', "Angle unique pour l'analyse du placement"],
+      cons: ['Petit angle mort dans le coin opposé'],
+    },
+    '3': {
+      name: 'Grillage Latéral Milieu',
+      short: 'Côté',
+      description: 'À mi-longueur du grillage latéral, à 2 m de hauteur. Idéal pour les déplacements latéraux et les échanges croisés.',
+      pros: ['Suivi clair des déplacements latéraux', "Idéal pour l'analyse du jeu de vitre"],
+      cons: ['Le poteau du filet peut masquer le joueur proche', 'Détails du côté opposé manquants'],
+    },
+  },
+};
+
 function generateMatchErrors(match: StoredMatch, locale: LocaleCode): ErrorEntry[] {
   // Use real AI-generated tips if available (new matches)
   if (match.result.coachingTips && match.result.coachingTips.length > 0) {
@@ -239,6 +335,8 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
 
   const totalFrames = Math.max(1800, recordSeconds * 30);
   const pos = phonePositions.find(p => p.id === selectedPos)!;
+  const posI18n = (PHONE_POS_I18N[locale] ?? PHONE_POS_I18N.en)[pos.id]
+    ?? { name: pos.name, short: `Pos ${pos.id}`, description: pos.description, pros: pos.pros, cons: pos.cons };
   const safeAnalysisIdx = Math.min(selectedAnalysisIdx, Math.max(0, matches.length - 1));
   const selectedAnalysisMatch = matches.length > 0 ? matches[safeAnalysisIdx] : null;
   const selectedScoreColor =
@@ -1159,20 +1257,22 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
               {phonePositions.map(p => (
                 <TouchableOpacity key={p.id} style={[s.posPill, selectedPos === p.id && { borderColor: p.color, backgroundColor: p.color + '18' }]} onPress={() => setSelectedPos(p.id)}>
                   <View style={[s.pillDot, { backgroundColor: p.color }]} />
-                  <Text style={[s.pillText, selectedPos === p.id && { color: p.color }]}>Pos {p.id}</Text>
+                  <Text style={[s.pillText, selectedPos === p.id && { color: p.color }]} numberOfLines={1}>
+                    {(PHONE_POS_I18N[locale] ?? PHONE_POS_I18N.en)[p.id]?.short ?? `Pos ${p.id}`}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
             <View style={[s.posDetail, { borderLeftColor: pos.color }]}>
-              <Text style={s.posName}>{pos.name}</Text>
+              <Text style={s.posName}>{posI18n.name}</Text>
               <View style={s.scoreRow}>
                 <View style={[s.scoreBar, { flex: pos.score }]} /><View style={{ flex: 100 - pos.score }} />
               </View>
               <Text style={[s.posScore, { color: pos.color }]}>{pos.score}{t('analysis.quality')}</Text>
-              <Text style={s.posDesc}>{pos.description}</Text>
+              <Text style={s.posDesc}>{posI18n.description}</Text>
               <View style={s.proscons}>
                 <View style={{ flex: 1 }}>
-                  {pos.pros.map((p2, i) => (
+                  {posI18n.pros.map((p2, i) => (
                     <View key={i} style={s.proItem}>
                       <Ionicons name="checkmark-circle" size={13} color={colors.primary} />
                       <Text style={s.proText}>{p2}</Text>
@@ -1180,7 +1280,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
                   ))}
                 </View>
                 <View style={{ flex: 1 }}>
-                  {pos.cons.map((c, i) => (
+                  {posI18n.cons.map((c, i) => (
                     <View key={i} style={s.proItem}>
                       <Ionicons name="close-circle" size={13} color={colors.danger} />
                       <Text style={s.proText}>{c}</Text>
