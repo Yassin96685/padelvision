@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { View, Image, Linking, Animated } from 'react-native';
+import { View, Image, Linking, Animated, Easing } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
@@ -23,21 +23,83 @@ initPurchases();
 
 const USER_KEY = '@padelvision/user';
 
+const EYE_W = 170;
+const EYE_H = 86;
+
 function SplashView() {
-  const scale = useRef(new Animated.Value(0.92)).current;
+  const eyeOpen    = useRef(new Animated.Value(0.04)).current; // scaleY: geschlossen → offen
+  const dotOpacity = useRef(new Animated.Value(0)).current;
+  const dotScale   = useRef(new Animated.Value(0.3)).current;
+  const glow       = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.spring(scale, { toValue: 1, friction: 8, tension: 45, useNativeDriver: true }).start();
+    SplashScreen.hideAsync().catch(() => {});
+
+    Animated.sequence([
+      Animated.delay(250),
+      Animated.timing(eyeOpen, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.parallel([
+        Animated.timing(dotOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
+        Animated.spring(dotScale, { toValue: 1, friction: 5, tension: 70, useNativeDriver: true }),
+      ]),
+    ]).start(() => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(glow, { toValue: 1, duration: 700, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+          Animated.timing(glow, { toValue: 0, duration: 700, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        ]),
+      ).start();
+    });
   }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#090C14', justifyContent: 'center', alignItems: 'center' }}>
       <StatusBar style="light" />
-      <Animated.Image
-        source={require('./assets/splash-logo.png')}
-        style={{ width: 110, height: 110, transform: [{ scale }] }}
-        resizeMode="contain"
-      />
+      <Animated.View
+        style={{
+          width: EYE_W,
+          height: EYE_H,
+          borderRadius: EYE_H / 2,
+          borderWidth: 2,
+          borderColor: '#1D2535',
+          backgroundColor: '#0F1320',
+          overflow: 'hidden',
+          justifyContent: 'center',
+          alignItems: 'center',
+          transform: [{ scaleY: eyeOpen }],
+        }}
+      >
+        <Animated.View
+          style={{
+            position: 'absolute',
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: '#00E87D',
+            opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.10, 0.30] })),
+            transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }],
+          }}
+        />
+        <Animated.View
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: 13,
+            backgroundColor: '#00E87D',
+            opacity: dotOpacity,
+            transform: [{ scale: dotScale }],
+            shadowColor: '#00E87D',
+            shadowOpacity: 0.9,
+            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 0 },
+          }}
+        />
+      </Animated.View>
     </View>
   );
 }
@@ -185,7 +247,7 @@ function Root() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || !minWaitDone) {
     return <SplashView />;
   }
 
