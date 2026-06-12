@@ -76,15 +76,15 @@ export default function SettingsScreen({ navigation }: any) {
   }, []);
 
   const changePassword = async () => {
-    if (newPassword.length < 6) { setPasswordError('Mindestens 6 Zeichen'); return; }
-    if (newPassword !== confirmPassword) { setPasswordError('Passwörter stimmen nicht überein'); return; }
+    if (newPassword.length < 6) { setPasswordError(t('resetPw.tooShort')); return; }
+    if (newPassword !== confirmPassword) { setPasswordError(t('resetPw.mismatch')); return; }
     setPasswordError('');
     try {
       await supabase.auth.refreshSession();
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) {
         if (error.message.toLowerCase().includes('session')) {
-          setPasswordError('Sitzung abgelaufen. Bitte ausloggen und neu einloggen.');
+          setPasswordError(t('settings.sessionExpired'));
         } else {
           setPasswordError(error.message);
         }
@@ -94,7 +94,7 @@ export default function SettingsScreen({ navigation }: any) {
       setNewPassword('');
       setConfirmPassword('');
       setTimeout(() => { setPasswordModal(false); setPasswordSuccess(false); }, 1500);
-    } catch { setPasswordError('Fehler beim Speichern'); }
+    } catch { setPasswordError(t('settings.saveError')); }
   };
 
   const [autoHighlight, setAutoHighlight] = React.useState(true);
@@ -245,7 +245,7 @@ export default function SettingsScreen({ navigation }: any) {
               {authProvider === 'email' && (
                 <>
                   <View style={s.divider} />
-                  <SettingRow icon="lock-closed-outline" iconBg={colors.cardAlt} iconColor={colors.textSec} label="Passwort ändern" value="" colors={colors} s={s} onPress={() => { setNewPassword(''); setConfirmPassword(''); setPasswordError(''); setPasswordSuccess(false); setPasswordModal(true); }} />
+                  <SettingRow icon="lock-closed-outline" iconBg={colors.cardAlt} iconColor={colors.textSec} label={t('settings.changePassword')} value="" colors={colors} s={s} onPress={() => { setNewPassword(''); setConfirmPassword(''); setPasswordError(''); setPasswordSuccess(false); setPasswordModal(true); }} />
                 </>
               )}
             </View>
@@ -407,7 +407,7 @@ export default function SettingsScreen({ navigation }: any) {
               style={[s.nameInput, { color: colors.text, borderColor: colors.border, backgroundColor: colors.bg }]}
               value={editName}
               onChangeText={setEditName}
-              placeholder="Your name"
+              placeholder={t('setup.namePlaceholder')}
               placeholderTextColor={colors.textMuted}
               autoCorrect={false}
             />
@@ -464,7 +464,7 @@ export default function SettingsScreen({ navigation }: any) {
           <View style={s.modalCard}>
             <View style={s.modalHandle} />
             <View style={s.modalHeader}>
-              <Text style={s.modalTitle}>Passwort ändern</Text>
+              <Text style={s.modalTitle}>{t('settings.changePassword')}</Text>
               <TouchableOpacity onPress={() => setPasswordModal(false)}>
                 <Ionicons name="close" size={22} color={colors.textSec} />
               </TouchableOpacity>
@@ -472,27 +472,27 @@ export default function SettingsScreen({ navigation }: any) {
             {passwordSuccess ? (
               <View style={{ alignItems: 'center', paddingVertical: 24, gap: 12 }}>
                 <Ionicons name="checkmark-circle" size={48} color={colors.primary} />
-                <Text style={{ color: colors.text, fontWeight: '700', fontSize: 16 }}>Passwort gespeichert</Text>
+                <Text style={{ color: colors.text, fontWeight: '700', fontSize: 16 }}>{t('settings.passwordSaved')}</Text>
               </View>
             ) : (
               <>
-                <Text style={s.inputLabel}>Neues Passwort</Text>
+                <Text style={s.inputLabel}>{t('resetPw.newPassword')}</Text>
                 <TextInput
                   style={[s.nameInput, { color: colors.text, borderColor: colors.border, backgroundColor: colors.bg, marginBottom: 14 }]}
                   value={newPassword}
                   onChangeText={setNewPassword}
-                  placeholder="Mindestens 6 Zeichen"
+                  placeholder={t('onboarding.newPasswordPlaceholder')}
                   placeholderTextColor={colors.textMuted}
                   secureTextEntry
                   autoCorrect={false}
                   autoCapitalize="none"
                 />
-                <Text style={s.inputLabel}>Passwort bestätigen</Text>
+                <Text style={s.inputLabel}>{t('resetPw.confirmPassword')}</Text>
                 <TextInput
                   style={[s.nameInput, { color: colors.text, borderColor: passwordError ? colors.danger : colors.border, backgroundColor: colors.bg }]}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  placeholder="Nochmal eingeben"
+                  placeholder={t('settings.repeatPassword')}
                   placeholderTextColor={colors.textMuted}
                   secureTextEntry
                   autoCorrect={false}
@@ -502,7 +502,7 @@ export default function SettingsScreen({ navigation }: any) {
                   <Text style={{ color: colors.danger, fontSize: 13, fontWeight: '600', marginTop: 8 }}>{passwordError}</Text>
                 )}
                 <TouchableOpacity style={[s.modalBtn, { backgroundColor: colors.primary }]} onPress={changePassword}>
-                  <Text style={s.modalBtnText}>Speichern</Text>
+                  <Text style={s.modalBtnText}>{t('resetPw.submit')}</Text>
                 </TouchableOpacity>
               </>
             )}

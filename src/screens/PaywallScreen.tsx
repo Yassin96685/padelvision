@@ -67,7 +67,7 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
   const handleSubscribe = async () => {
     const pkg = plan === 'yearly' ? packages.yearly : packages.monthly;
     if (!pkg) {
-      Alert.alert('Nicht verfügbar', 'Abonnement momentan nicht verfügbar. Bitte stelle sicher, dass du mit deiner Apple ID eingeloggt bist und versuche es erneut.');
+      Alert.alert(t('paywall.notAvailableTitle'), t('paywall.notAvailableMsg'));
       return;
     }
     setLoading(true);
@@ -76,7 +76,7 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
       onDone();
     } catch (e: any) {
       if (!e?.userCancelled) {
-        Alert.alert('Fehler', 'Kauf fehlgeschlagen. Bitte versuche es erneut.');
+        Alert.alert(t('paywall.errorTitle'), t('paywall.purchaseFailed'));
       }
     } finally {
       setLoading(false);
@@ -90,10 +90,10 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
       if (info.entitlements.active['pro']) {
         onDone();
       } else {
-        Alert.alert('Keine aktiven Käufe gefunden.');
+        Alert.alert(t('paywall.noActivePurchases'));
       }
     } catch {
-      Alert.alert('Fehler beim Wiederherstellen.');
+      Alert.alert(t('paywall.restoreError'));
     } finally {
       setLoading(false);
     }
@@ -218,9 +218,7 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
             <View style={s.appleRow}>
               <Ionicons name="lock-closed" size={11} color={C.textSec} />
               <Text style={s.appleTxt}>
-                {plan === 'yearly'
-                  ? 'Sichere Zahlung über Apple · Jährliche Abrechnung'
-                  : 'Sichere Zahlung über Apple · Monatlich kündbar'}
+                {plan === 'yearly' ? t('paywall.secureYearly') : t('paywall.secureMonthly')}
               </Text>
             </View>
             <Text style={s.legal}>
@@ -229,7 +227,7 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
                 : t('paywall.legalMonthly', { price: monthlyPrice }) + t('paywall.legalSuffix')}
             </Text>
             <TouchableOpacity onPress={handleRestore} style={s.restoreBtn}>
-              <Text style={s.restoreTxt}>Kauf wiederherstellen</Text>
+              <Text style={s.restoreTxt}>{t('paywall.restore')}</Text>
             </TouchableOpacity>
           </View>
 
