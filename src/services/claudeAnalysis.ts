@@ -31,8 +31,8 @@ async function fileToBase64(uri: string): Promise<string | null> {
 
 async function extractFrames(videoUri: string, durationSecs: number): Promise<string[]> {
   const durationMs = Math.max(durationSecs, 1) * 1000;
-  // 1 frame every 3 seconds — min 5, max 20
-  const count = Math.min(20, Math.max(5, Math.floor(durationSecs / 3)));
+  // 1 frame every 1.5 seconds — min 5, max 40 (genauere Schlag-Schaetzung)
+  const count = Math.min(40, Math.max(5, Math.floor(durationSecs / 1.5)));
   const frames: string[] = [];
 
   for (let i = 0; i < count; i++) {

@@ -1692,9 +1692,9 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
 
                 <View style={ai.statsGrid}>
                   {[
-                    { label: t('analysis.totalShots'), value: `${r.shots}`, color: AI_BLUE_LIGHT },
-                    { label: t('analysis.winners'), value: `${r.winners}`, color: '#4ADE80' },
-                    { label: t('analysis.errors'), value: `${r.errors}`, color: '#F87171' },
+                    { label: t('analysis.totalShots'), value: `~${r.shots}`, color: AI_BLUE_LIGHT },
+                    { label: t('analysis.winners'), value: `~${r.winners}`, color: '#4ADE80' },
+                    { label: t('analysis.errors'), value: `~${r.errors}`, color: '#F87171' },
                     { label: t('analysis.courtCoverage'), value: `${r.coverage}%`, color: AI_BLUE_LIGHT },
                     { label: t('analysis.errorRate'), value: `${r.errorRate}%`, color: r.errorRate > 20 ? '#FFA502' : '#4ADE80' },
                     { label: t('analysis.avgRally'), value: `${r.avgRally}`, color: AI_BLUE_LIGHT },
@@ -1705,6 +1705,9 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
                     </View>
                   ))}
                 </View>
+                <Text style={{ color: '#5A6478', fontSize: 11, textAlign: 'center', marginTop: 6 }}>
+                  {t('analysis.aiEstimate')}
+                </Text>
 
                 <View style={ai.section}>
                   <Text style={ai.sectionHead}>{t('analysis.strengths')}</Text>
@@ -1783,21 +1786,26 @@ function QuickStat({ icon, label, value, color, s }: any) {
 
 function RealStatsGrid({ result, colors, s, t }: { result: AnalysisResult; colors: any; s: any; t: (k: string) => string }) {
   const stats = [
-    { value: String(result.shots),       label: t('home.shots'),          color: colors.text },
-    { value: String(result.winners),     label: t('analysis.winners'),    color: '#00D97E' },
-    { value: String(result.errors),      label: t('analysis.errors'),     color: '#FF5252' },
+    { value: `~${result.shots}`,         label: t('home.shots'),          color: colors.text },
+    { value: `~${result.winners}`,       label: t('analysis.winners'),    color: '#00D97E' },
+    { value: `~${result.errors}`,        label: t('analysis.errors'),     color: '#FF5252' },
     { value: `${result.errorRate}%`,     label: t('analysis.errorRate'),  color: result.errorRate > 25 ? '#FF5252' : '#FFA502' },
     { value: result.avgRally,            label: t('analysis.avgRally'),   color: colors.blue },
     { value: `${result.score}/100`,      label: 'Score',                  color: colors.primary },
   ];
   return (
-    <View style={s.realStatsGrid}>
-      {stats.map((stat, i) => (
-        <View key={i} style={[s.realStatCard, { borderColor: colors.border }]}>
-          <Text style={[s.realStatValue, { color: stat.color }]}>{stat.value}</Text>
-          <Text style={s.realStatLabel}>{stat.label}</Text>
-        </View>
-      ))}
+    <View>
+      <View style={s.realStatsGrid}>
+        {stats.map((stat, i) => (
+          <View key={i} style={[s.realStatCard, { borderColor: colors.border }]}>
+            <Text style={[s.realStatValue, { color: stat.color }]}>{stat.value}</Text>
+            <Text style={s.realStatLabel}>{stat.label}</Text>
+          </View>
+        ))}
+      </View>
+      <Text style={{ color: colors.textSec, fontSize: 11, textAlign: 'center', marginTop: 6 }}>
+        {t('analysis.aiEstimate')}
+      </Text>
     </View>
   );
 }
