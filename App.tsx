@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { View, Image, Linking, Animated, Easing } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
@@ -25,10 +26,12 @@ const USER_KEY = '@padelvision/user';
 
 // Quadrat mit zwei voll abgerundeten, gegenueberliegenden Ecken, um 45 Grad
 // gedreht = mandelfoermiges Auge mit spitzen Augenwinkeln (kein SVG noetig)
-const EYE_SIZE = 120;
+const EYE_SIZE = 130;
+const EYE_BOX = Math.ceil(EYE_SIZE * Math.SQRT2); // Bounding-Box des rotierten Quadrats
 
 function SplashView() {
-  const eyeOpen    = useRef(new Animated.Value(0.04)).current; // scaleY: geschlossen → offen
+  const eyeOpen    = useRef(new Animated.Value(0)).current;   // 0 = geschlossen, 1 = offen
+  const racketY    = useRef(new Animated.Value(130)).current; // Schlaeger startet unterhalb, vom Lid verdeckt
   const dotOpacity = useRef(new Animated.Value(0)).current;
   const dotScale   = useRef(new Animated.Value(0.3)).current;
   const glow       = useRef(new Animated.Value(0)).current;
@@ -42,6 +45,13 @@ function SplashView() {
         toValue: 1,
         duration: 900,
         easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      // Schlaegerkopf-Mitte landet im Augenzentrum (Kopf 56 + Hals 6 + Griff 22 → Offset 14)
+      Animated.timing(racketY, {
+        toValue: 14,
+        duration: 650,
+        easing: Easing.out(Easing.back(1.3)),
         useNativeDriver: true,
       }),
       Animated.parallel([
@@ -79,60 +89,114 @@ function SplashView() {
         >
           <View
             style={{
-              width: 64,
-              height: 64,
+              position: 'absolute',
+              width: EYE_BOX,
+              height: EYE_BOX,
+              top: (EYE_SIZE - EYE_BOX) / 2,
+              left: (EYE_SIZE - EYE_BOX) / 2,
               justifyContent: 'center',
               alignItems: 'center',
               transform: [{ rotate: '-45deg' }],
             }}
           >
-            <Animated.View
-              style={{
-                position: 'absolute',
-                width: 64,
-                height: 64,
-                borderRadius: 32,
-                backgroundColor: '#00E87D',
-                opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.10, 0.28] })),
-                transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }],
-              }}
+            {/* Padel-Schlaeger steigt von unten ins Auge */}
+            <Animated.View style={{ position: 'absolute', alignItems: 'center', transform: [{ translateY: racketY }] }}>
+              <View
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: '#141B2E',
+                  borderWidth: 2,
+                  borderColor: 'rgba(0,232,125,0.45)',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                {[[-19, 0], [19, 0], [-10, -17], [10, -17], [-10, 17], [10, 17]].map(([x, y], i) => (
+                  <View
+                    key={i}
+                    style={{
+                      position: 'absolute',
+                      width: 4,
+                      height: 4,
+                      borderRadius: 2,
+                      backgroundColor: 'rgba(255,255,255,0.14)',
+                      transform: [{ translateX: x }, { translateY: y }],
+                    }}
+                  />
+                ))}
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: '#00E87D',
+                    opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.12, 0.30] })),
+                    transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] }) }],
+                  }}
+                />
+                <Animated.View
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: 9,
+                    backgroundColor: '#00E87D',
+                    opacity: dotOpacity,
+                    transform: [{ scale: dotScale }],
+                    shadowColor: '#00E87D',
+                    shadowOpacity: 0.9,
+                    shadowRadius: 12,
+                    shadowOffset: { width: 0, height: 0 },
+                  }}
+                />
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    top: 15,
+                    left: 18,
+                    width: 5,
+                    height: 5,
+                    borderRadius: 2.5,
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    opacity: dotOpacity,
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  width: 14,
+                  height: 6,
+                  backgroundColor: '#141B2E',
+                  borderLeftWidth: 2,
+                  borderRightWidth: 2,
+                  borderColor: 'rgba(0,232,125,0.45)',
+                  marginTop: -1,
+                }}
+              />
+              <View
+                style={{
+                  width: 11,
+                  height: 22,
+                  borderRadius: 5,
+                  backgroundColor: '#1D2535',
+                  borderWidth: 1.5,
+                  borderColor: '#2A3550',
+                }}
+              />
+            </Animated.View>
+            {/* Lidschatten oben fuer Tiefe */}
+            <LinearGradient
+              colors={['rgba(0,0,0,0.55)', 'transparent']}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, height: EYE_BOX * 0.44 }}
+              pointerEvents="none"
             />
-            <View
-              style={{
-                position: 'absolute',
-                width: 46,
-                height: 46,
-                borderRadius: 23,
-                borderWidth: 1.5,
-                borderColor: 'rgba(0,232,125,0.35)',
-                backgroundColor: 'rgba(0,232,125,0.06)',
-              }}
-            />
-            <Animated.View
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: 11,
-                backgroundColor: '#00E87D',
-                opacity: dotOpacity,
-                transform: [{ scale: dotScale }],
-                shadowColor: '#00E87D',
-                shadowOpacity: 0.9,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 0 },
-              }}
-            />
-            <Animated.View
-              style={{
-                position: 'absolute',
-                top: 19,
-                left: 23,
-                width: 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: 'rgba(255,255,255,0.9)',
-                opacity: dotOpacity,
-              }}
+            {/* Unterlid-Schatten — Schlaeger wirkt dahinter hervorkommend */}
+            <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.30)']}
+              style={{ position: 'absolute', bottom: EYE_BOX * 0.28, left: 0, right: 0, height: EYE_BOX * 0.20 }}
+              pointerEvents="none"
             />
           </View>
         </View>
