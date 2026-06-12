@@ -23,8 +23,9 @@ initPurchases();
 
 const USER_KEY = '@padelvision/user';
 
-const EYE_W = 170;
-const EYE_H = 86;
+// Quadrat mit zwei voll abgerundeten, gegenueberliegenden Ecken, um 45 Grad
+// gedreht = mandelfoermiges Auge mit spitzen Augenwinkeln (kein SVG noetig)
+const EYE_SIZE = 120;
 
 function SplashView() {
   const eyeOpen    = useRef(new Animated.Value(0.04)).current; // scaleY: geschlossen → offen
@@ -60,45 +61,81 @@ function SplashView() {
   return (
     <View style={{ flex: 1, backgroundColor: '#090C14', justifyContent: 'center', alignItems: 'center' }}>
       <StatusBar style="light" />
-      <Animated.View
-        style={{
-          width: EYE_W,
-          height: EYE_H,
-          borderRadius: EYE_H / 2,
-          borderWidth: 2,
-          borderColor: '#1D2535',
-          backgroundColor: '#0F1320',
-          overflow: 'hidden',
-          justifyContent: 'center',
-          alignItems: 'center',
-          transform: [{ scaleY: eyeOpen }],
-        }}
-      >
-        <Animated.View
+      <Animated.View style={{ transform: [{ scaleY: eyeOpen.interpolate({ inputRange: [0, 1], outputRange: [0.05, 0.85] }) }] }}>
+        <View
           style={{
-            position: 'absolute',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            backgroundColor: '#00E87D',
-            opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.10, 0.30] })),
-            transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }],
+            width: EYE_SIZE,
+            height: EYE_SIZE,
+            borderTopLeftRadius: EYE_SIZE,
+            borderBottomRightRadius: EYE_SIZE,
+            borderWidth: 2,
+            borderColor: '#1D2535',
+            backgroundColor: '#0F1320',
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+            transform: [{ rotate: '45deg' }],
           }}
-        />
-        <Animated.View
-          style={{
-            width: 26,
-            height: 26,
-            borderRadius: 13,
-            backgroundColor: '#00E87D',
-            opacity: dotOpacity,
-            transform: [{ scale: dotScale }],
-            shadowColor: '#00E87D',
-            shadowOpacity: 0.9,
-            shadowRadius: 12,
-            shadowOffset: { width: 0, height: 0 },
-          }}
-        />
+        >
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              justifyContent: 'center',
+              alignItems: 'center',
+              transform: [{ rotate: '-45deg' }],
+            }}
+          >
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: 64,
+                height: 64,
+                borderRadius: 32,
+                backgroundColor: '#00E87D',
+                opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.10, 0.28] })),
+                transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }],
+              }}
+            />
+            <View
+              style={{
+                position: 'absolute',
+                width: 46,
+                height: 46,
+                borderRadius: 23,
+                borderWidth: 1.5,
+                borderColor: 'rgba(0,232,125,0.35)',
+                backgroundColor: 'rgba(0,232,125,0.06)',
+              }}
+            />
+            <Animated.View
+              style={{
+                width: 22,
+                height: 22,
+                borderRadius: 11,
+                backgroundColor: '#00E87D',
+                opacity: dotOpacity,
+                transform: [{ scale: dotScale }],
+                shadowColor: '#00E87D',
+                shadowOpacity: 0.9,
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 0 },
+              }}
+            />
+            <Animated.View
+              style={{
+                position: 'absolute',
+                top: 19,
+                left: 23,
+                width: 6,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                opacity: dotOpacity,
+              }}
+            />
+          </View>
+        </View>
       </Animated.View>
     </View>
   );
