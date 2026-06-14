@@ -10,6 +10,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +18,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocale } from '../i18n/LocaleContext';
 import { getOfferings, purchasePackage, restorePurchases } from '../services/purchases';
 import type { PurchasesPackage } from 'react-native-purchases';
+
+const PRIVACY_URL = 'https://gist.github.com/Yassin96685/522a131978f9108346af2b1cc9a9009b';
+const EULA_URL    = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 
 const C = {
   bg:         '#090C14',
@@ -174,7 +178,10 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
                   {t('paywall.planYearly')}
                 </Text>
                 <Text style={[s.togglePrice, plan === 'yearly' && s.togglePriceActive]}>
-                  {plan === 'yearly' ? `${monthlyBreak}/Mo` : yearlyPrice}
+                  {yearlyPrice}
+                </Text>
+                <Text style={[s.toggleSub, plan === 'yearly' && s.toggleSubActive]}>
+                  {monthlyBreak}/Mo
                 </Text>
               </TouchableOpacity>
 
@@ -187,7 +194,10 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
                   {t('paywall.planMonthly')}
                 </Text>
                 <Text style={[s.togglePrice, plan === 'monthly' && s.togglePriceActive]}>
-                  {monthlyPrice}/Mo
+                  {monthlyPrice}
+                </Text>
+                <Text style={[s.toggleSub, plan === 'monthly' && s.toggleSubActive]}>
+                  /Mo
                 </Text>
               </TouchableOpacity>
             </View>
@@ -229,6 +239,15 @@ export default function PaywallScreen({ onDone, onClose }: { onDone: () => void;
             <TouchableOpacity onPress={handleRestore} style={s.restoreBtn}>
               <Text style={s.restoreTxt}>{t('paywall.restore')}</Text>
             </TouchableOpacity>
+            <View style={s.linksRow}>
+              <TouchableOpacity onPress={() => Linking.openURL(PRIVACY_URL)}>
+                <Text style={s.linkTxt}>{t('paywall.privacy')}</Text>
+              </TouchableOpacity>
+              <Text style={s.linkSep}>·</Text>
+              <TouchableOpacity onPress={() => Linking.openURL(EULA_URL)}>
+                <Text style={s.linkTxt}>{t('paywall.terms')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
         </Animated.View>
@@ -300,8 +319,10 @@ const s = StyleSheet.create({
   saveTxt: { fontSize: 9, fontWeight: '800', color: '#000', letterSpacing: 0.5 },
   toggleTitle: { fontSize: 13, fontWeight: '700', color: C.textSec, marginBottom: 4 },
   toggleTitleActive: { color: C.text },
-  togglePrice: { fontSize: 20, fontWeight: '800', color: C.textSec },
+  togglePrice: { fontSize: 22, fontWeight: '800', color: C.textSec },
   togglePriceActive: { color: C.primary },
+  toggleSub: { fontSize: 11, fontWeight: '500', color: C.textSec, marginTop: 2 },
+  toggleSubActive: { color: C.primary + 'BB' },
 
   // Footer
   footer: {
@@ -325,6 +346,9 @@ const s = StyleSheet.create({
   legal: { fontSize: 11, color: C.textSec, textAlign: 'center', lineHeight: 16 },
   restoreBtn: { marginTop: 10, alignItems: 'center' },
   restoreTxt: { color: C.textSec, fontSize: 12 },
+  linksRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 8 },
+  linkTxt: { color: C.textSec, fontSize: 11, textDecorationLine: 'underline' },
+  linkSep: { color: C.textSec, fontSize: 11 },
   closeBtn: {
     position: 'absolute', top: 12, right: 16, zIndex: 10,
     width: 34, height: 34, borderRadius: 17,
