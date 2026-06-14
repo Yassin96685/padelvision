@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, Platform } from 'react-native';
 import { saveMatch, loadMatches, deleteMatch as supaDeleteMatch } from '../services/supabaseService';
+import { translate } from '../i18n/LocaleContext';
 
 const DEFAULT_KEY = '@padelvision/matches';
 const matchKey = (userId: string) => userId ? `@padelvision/matches_${userId}` : DEFAULT_KEY;
@@ -115,7 +116,7 @@ export function MatchProvider({ children, userId = '' }: { children: React.React
     saveMatch(match, userId || undefined).catch((err) => {
       const msg = err?.message ?? String(err);
       console.error('[Supabase] saveMatch failed:', msg);
-      Alert.alert('Supabase Fehler', `Match konnte nicht gespeichert werden:\n\n${msg}`);
+      Alert.alert(translate('error.saveTitle'), translate('error.saveMsg', { msg }));
     });
 
     // Rating prompt after the 3rd match
@@ -128,12 +129,12 @@ export function MatchProvider({ children, userId = '' }: { children: React.React
         await AsyncStorage.setItem('@padelvision/rating_asked', '1');
         setTimeout(() => {
           Alert.alert(
-            'PadelVision bewerten ⭐',
-            'Du hast bereits 3 Matches analysiert! Hilf uns mit einer kurzen Bewertung im App Store.',
+            translate('rating.title'),
+            translate('rating.msg'),
             [
-              { text: 'Später', style: 'cancel' },
+              { text: translate('rating.later'), style: 'cancel' },
               {
-                text: '⭐ Jetzt bewerten',
+                text: translate('rating.now'),
                 onPress: () => {
                   const url = Platform.OS === 'ios'
                     ? 'https://apps.apple.com/app/padelvision'

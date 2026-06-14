@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLocale } from '../i18n/LocaleContext';
 
 const { width } = Dimensions.get('window');
 
@@ -33,6 +34,7 @@ export async function saveTutorialPreference(alwaysShow: boolean) {
 // ─── Slide illustrations ───────────────────────────────────────────────────
 
 function IllustrationPosition() {
+  const { t } = useLocale();
   return (
     <View style={[il.wrap, { flexDirection: 'row', paddingHorizontal: 16 }]}>
       {/* Phone on the side */}
@@ -40,7 +42,7 @@ function IllustrationPosition() {
         <View style={il.phoneBubble}>
           <Ionicons name="phone-portrait" size={24} color="#fff" />
         </View>
-        <Text style={il.hint}>Netzhöhe</Text>
+        <Text style={il.hint}>{t('tutorial.netHeight')}</Text>
       </View>
 
       {/* Arrow */}
@@ -66,7 +68,7 @@ function IllustrationPosition() {
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(0,232,125,0.12)', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4, marginTop: 10 }}>
           <Ionicons name="checkmark-circle" size={13} color={GREEN} />
-          <Text style={il.badgeText}>Optimal</Text>
+          <Text style={il.badgeText}>{t('tutorial.optimal')}</Text>
         </View>
       </View>
     </View>
@@ -74,6 +76,7 @@ function IllustrationPosition() {
 }
 
 function IllustrationLandscape() {
+  const { t } = useLocale();
   return (
     <View style={il.wrap}>
       {/* Phone in landscape */}
@@ -97,19 +100,20 @@ function IllustrationLandscape() {
       {/* Rotation arrow */}
       <View style={il.rotArrow}>
         <Ionicons name="refresh" size={28} color="#00E87D" />
-        <Text style={il.rotLabel}>90° drehen</Text>
+        <Text style={il.rotLabel}>{t('tutorial.rotate90')}</Text>
       </View>
     </View>
   );
 }
 
 function IllustrationStable() {
+  const { t } = useLocale();
   return (
     <View style={[il.wrap, { flexDirection: 'row' }]}>
 
       {/* LEFT: Stativ */}
       <View style={il.stableHalf}>
-        <Text style={il.stableTitle}>Stativ</Text>
+        <Text style={il.stableTitle}>{t('tutorial.tripod')}</Text>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
           {/* Phone horizontal */}
           <View style={il.stativPhone}>
@@ -130,20 +134,20 @@ function IllustrationStable() {
         </View>
         <View style={il.stableBadge}>
           <Ionicons name="checkmark-circle" size={13} color={GREEN} />
-          <Text style={il.stableBadgeText}>Empfohlen</Text>
+          <Text style={il.stableBadgeText}>{t('tutorial.recommended')}</Text>
         </View>
       </View>
 
       {/* DIVIDER */}
       <View style={il.stableDivider}>
         <View style={il.stableDivLine} />
-        <Text style={il.orText}>oder</Text>
+        <Text style={il.orText}>{t('tutorial.or')}</Text>
         <View style={il.stableDivLine} />
       </View>
 
       {/* RIGHT: Zaun / Glaswand */}
       <View style={il.stableHalf}>
-        <Text style={il.stableTitle}>Zaun / Glas</Text>
+        <Text style={il.stableTitle}>{t('tutorial.fenceGlass')}</Text>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={il.fencePanel}>
             {/* Horizontal rails */}
@@ -162,7 +166,7 @@ function IllustrationStable() {
         </View>
         <View style={il.stableBadge}>
           <Ionicons name="checkmark-circle" size={13} color={GREEN} />
-          <Text style={il.stableBadgeText}>Stabil</Text>
+          <Text style={il.stableBadgeText}>{t('tutorial.stable')}</Text>
         </View>
       </View>
 
@@ -171,6 +175,7 @@ function IllustrationStable() {
 }
 
 function IllustrationLight() {
+  const { t } = useLocale();
   return (
     <View style={[il.wrap, { flexDirection: 'row', paddingHorizontal: 10, gap: 10 }]}>
 
@@ -178,7 +183,7 @@ function IllustrationLight() {
       <View style={[il.lightBox, il.lightBoxGood]}>
         <View style={il.lightBoxHeader}>
           <Ionicons name="checkmark-circle" size={22} color={GREEN} />
-          <Text style={[il.lightBoxTitle, { color: GREEN }]}>Gut</Text>
+          <Text style={[il.lightBoxTitle, { color: GREEN }]}>{t('tutorial.good')}</Text>
         </View>
         {/* ☀ → 📷 → COURT */}
         <View style={il.lightDiagram}>
@@ -190,14 +195,14 @@ function IllustrationLight() {
           <Ionicons name="arrow-forward" size={12} color={GREEN} />
           <View style={il.lightCourtBox} />
         </View>
-        <Text style={il.lightHint}>Sonne im{'\n'}Rücken</Text>
+        <Text style={il.lightHint}>{t('tutorial.sunBehind')}</Text>
       </View>
 
       {/* SCHLECHT */}
       <View style={[il.lightBox, il.lightBoxBad]}>
         <View style={il.lightBoxHeader}>
           <Ionicons name="close-circle" size={22} color="#EF4444" />
-          <Text style={[il.lightBoxTitle, { color: '#EF4444' }]}>Schlecht</Text>
+          <Text style={[il.lightBoxTitle, { color: '#EF4444' }]}>{t('tutorial.bad')}</Text>
         </View>
         {/* COURT → 📷 → ☀  (kamera filmt in die Sonne) */}
         <View style={il.lightDiagram}>
@@ -209,7 +214,7 @@ function IllustrationLight() {
           <Ionicons name="arrow-forward" size={12} color="#EF4444" />
           <Ionicons name="sunny" size={24} color="#EF4444" />
         </View>
-        <Text style={[il.lightHint, { color: '#EF4444' }]}>Gegen{'\n'}die Sonne</Text>
+        <Text style={[il.lightHint, { color: '#EF4444' }]}>{t('tutorial.againstSun')}</Text>
       </View>
 
     </View>
@@ -226,22 +231,10 @@ const ILLUSTRATIONS = [
 // ─── Slide data ────────────────────────────────────────────────────────────
 
 const SLIDES = [
-  {
-    title: 'Seitliche Platzierung',
-    desc: 'Stelle dein Handy außerhalb des Courts, seitlich auf Netzhöhe. So erfasst die Kamera den gesamten Court von einer guten Perspektive.',
-  },
-  {
-    title: 'Querformat benutzen',
-    desc: 'Drehe dein Handy ins Querformat (Landscape). Damit passt der gesamte Padel-Court ins Bild und die KI-Analyse liefert bessere Ergebnisse.',
-  },
-  {
-    title: 'Stabil befestigen',
-    desc: 'Nutze ein Stativ oder lehne das Handy sicher am Zaun an. Verwackelte Aufnahmen reduzieren die Analyse-Qualität stark.',
-  },
-  {
-    title: 'Auf Licht achten',
-    desc: 'Filme nicht gegen die Sonne. Ideal ist eine gleichmäßige Beleuchtung. Die Kamera sollte zur Sonne zeigen, nicht weg davon.',
-  },
+  { titleKey: 'tutorial.slide1Title', descKey: 'tutorial.slide1Desc' },
+  { titleKey: 'tutorial.slide2Title', descKey: 'tutorial.slide2Desc' },
+  { titleKey: 'tutorial.slide3Title', descKey: 'tutorial.slide3Desc' },
+  { titleKey: 'tutorial.slide4Title', descKey: 'tutorial.slide4Desc' },
 ];
 
 // ─── Main component ────────────────────────────────────────────────────────
@@ -252,6 +245,7 @@ type Props = {
 };
 
 export default function TutorialModal({ visible, onClose }: Props) {
+  const { t } = useLocale();
   const insets = useSafeAreaInsets();
   const [slide, setSlide] = useState(0);
   const [alwaysShow, setAlwaysShow] = useState(false);
@@ -307,7 +301,7 @@ export default function TutorialModal({ visible, onClose }: Props) {
           <View style={s.topRow}>
             <Text style={s.stepLabel}>{slide + 1} / {SLIDES.length}</Text>
             <TouchableOpacity onPress={skip} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text style={s.skipText}>Überspringen</Text>
+              <Text style={s.skipText}>{t('tutorial.skip')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -325,16 +319,16 @@ export default function TutorialModal({ visible, onClose }: Props) {
 
           {/* Text */}
           <Animated.View style={{ transform: [{ translateX: slideAnim }] }}>
-            <Text style={s.title}>{data.title}</Text>
-            <Text style={s.desc}>{data.desc}</Text>
+            <Text style={s.title}>{t(data.titleKey)}</Text>
+            <Text style={s.desc}>{t(data.descKey)}</Text>
           </Animated.View>
 
           {/* Always show toggle (only on last slide) */}
           {isLast && (
             <View style={s.toggleRow}>
               <View style={s.toggleLeft}>
-                <Text style={s.toggleLabel}>Tutorial immer anzeigen</Text>
-                <Text style={s.toggleSub}>Vor jeder Aufnahme anzeigen</Text>
+                <Text style={s.toggleLabel}>{t('tutorial.alwaysShow')}</Text>
+                <Text style={s.toggleSub}>{t('tutorial.alwaysShowSub')}</Text>
               </View>
               <Switch
                 value={alwaysShow}
@@ -350,11 +344,11 @@ export default function TutorialModal({ visible, onClose }: Props) {
             {slide > 0 && (
               <TouchableOpacity style={s.btnBack} onPress={back} activeOpacity={0.85}>
                 <Ionicons name="arrow-back" size={16} color="#8B95A6" />
-                <Text style={s.btnBackText}>Zurück</Text>
+                <Text style={s.btnBackText}>{t('tutorial.back')}</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity style={[s.btn, { flex: 1 }]} onPress={next} activeOpacity={0.85}>
-              <Text style={s.btnText}>{isLast ? 'Aufnahme starten' : 'Weiter'}</Text>
+              <Text style={s.btnText}>{isLast ? t('tutorial.start') : t('tutorial.next')}</Text>
               <Ionicons name={isLast ? 'play' : 'arrow-forward'} size={16} color="#fff" />
             </TouchableOpacity>
           </View>

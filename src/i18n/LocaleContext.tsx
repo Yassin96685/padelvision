@@ -414,6 +414,45 @@ const en: Record<string, string> = {
   'setup.next': 'Continue',
   'setup.getStarted': "Let's Go",
   'setup.skip': 'Skip',
+
+  // Tutorial (recording setup)
+  'tutorial.skip': 'Skip',
+  'tutorial.back': 'Back',
+  'tutorial.next': 'Next',
+  'tutorial.start': 'Start Recording',
+  'tutorial.alwaysShow': 'Always show tutorial',
+  'tutorial.alwaysShowSub': 'Show before every recording',
+  'tutorial.netHeight': 'Net height',
+  'tutorial.optimal': 'Optimal',
+  'tutorial.rotate90': 'Rotate 90°',
+  'tutorial.tripod': 'Tripod',
+  'tutorial.recommended': 'Recommended',
+  'tutorial.or': 'or',
+  'tutorial.fenceGlass': 'Fence / Glass',
+  'tutorial.stable': 'Stable',
+  'tutorial.good': 'Good',
+  'tutorial.bad': 'Bad',
+  'tutorial.sunBehind': 'Sun behind\nyou',
+  'tutorial.againstSun': 'Against\nthe sun',
+  'tutorial.slide1Title': 'Side placement',
+  'tutorial.slide1Desc': 'Place your phone outside the court, to the side at net height. This captures the whole court from a good perspective.',
+  'tutorial.slide2Title': 'Use landscape',
+  'tutorial.slide2Desc': 'Turn your phone to landscape. The whole padel court fits in frame and the AI analysis delivers better results.',
+  'tutorial.slide3Title': 'Mount securely',
+  'tutorial.slide3Desc': 'Use a tripod or lean the phone securely against the fence. Shaky footage greatly reduces analysis quality.',
+  'tutorial.slide4Title': 'Mind the light',
+  'tutorial.slide4Desc': "Don't film against the sun. Even lighting is ideal. The camera should point toward the sun, not away from it.",
+
+  // Forgot password
+  'onboarding.forgotInfo': "Enter your email address. We'll send you a link to reset your password.",
+
+  // Rating prompt + save error
+  'rating.title': 'Rate PadelVision ⭐',
+  'rating.msg': "You've already analyzed 3 matches! Help us with a quick rating on the App Store.",
+  'rating.later': 'Later',
+  'rating.now': '⭐ Rate now',
+  'error.saveTitle': 'Save Error',
+  'error.saveMsg': 'Match could not be saved:\n\n{msg}',
 };
 
 const de: Record<string, string> = {
@@ -801,6 +840,45 @@ const de: Record<string, string> = {
   'setup.next': 'Weiter',
   'setup.getStarted': 'Loslegen',
   'setup.skip': 'Überspringen',
+
+  // Tutorial (Aufnahme-Setup)
+  'tutorial.skip': 'Überspringen',
+  'tutorial.back': 'Zurück',
+  'tutorial.next': 'Weiter',
+  'tutorial.start': 'Aufnahme starten',
+  'tutorial.alwaysShow': 'Tutorial immer anzeigen',
+  'tutorial.alwaysShowSub': 'Vor jeder Aufnahme anzeigen',
+  'tutorial.netHeight': 'Netzhöhe',
+  'tutorial.optimal': 'Optimal',
+  'tutorial.rotate90': '90° drehen',
+  'tutorial.tripod': 'Stativ',
+  'tutorial.recommended': 'Empfohlen',
+  'tutorial.or': 'oder',
+  'tutorial.fenceGlass': 'Zaun / Glas',
+  'tutorial.stable': 'Stabil',
+  'tutorial.good': 'Gut',
+  'tutorial.bad': 'Schlecht',
+  'tutorial.sunBehind': 'Sonne im\nRücken',
+  'tutorial.againstSun': 'Gegen\ndie Sonne',
+  'tutorial.slide1Title': 'Seitliche Platzierung',
+  'tutorial.slide1Desc': 'Stelle dein Handy außerhalb des Courts, seitlich auf Netzhöhe. So erfasst die Kamera den gesamten Court von einer guten Perspektive.',
+  'tutorial.slide2Title': 'Querformat benutzen',
+  'tutorial.slide2Desc': 'Drehe dein Handy ins Querformat (Landscape). Damit passt der gesamte Padel-Court ins Bild und die KI-Analyse liefert bessere Ergebnisse.',
+  'tutorial.slide3Title': 'Stabil befestigen',
+  'tutorial.slide3Desc': 'Nutze ein Stativ oder lehne das Handy sicher am Zaun an. Verwackelte Aufnahmen reduzieren die Analyse-Qualität stark.',
+  'tutorial.slide4Title': 'Auf Licht achten',
+  'tutorial.slide4Desc': 'Filme nicht gegen die Sonne. Ideal ist eine gleichmäßige Beleuchtung. Die Kamera sollte zur Sonne zeigen, nicht weg davon.',
+
+  // Passwort vergessen
+  'onboarding.forgotInfo': 'Gib deine E-Mail-Adresse ein. Wir senden dir einen Link zum Zurücksetzen deines Passworts.',
+
+  // Bewertungs-Prompt + Speicherfehler
+  'rating.title': 'PadelVision bewerten ⭐',
+  'rating.msg': 'Du hast bereits 3 Matches analysiert! Hilf uns mit einer kurzen Bewertung im App Store.',
+  'rating.later': 'Später',
+  'rating.now': '⭐ Jetzt bewerten',
+  'error.saveTitle': 'Speicherfehler',
+  'error.saveMsg': 'Match konnte nicht gespeichert werden:\n\n{msg}',
 };
 
 const es: Record<string, string> = {
@@ -1188,6 +1266,45 @@ const es: Record<string, string> = {
   'setup.next': 'Continuar',
   'setup.getStarted': '¡Vamos!',
   'setup.skip': 'Omitir',
+
+  // Tutorial (configuración de grabación)
+  'tutorial.skip': 'Omitir',
+  'tutorial.back': 'Atrás',
+  'tutorial.next': 'Siguiente',
+  'tutorial.start': 'Empezar a grabar',
+  'tutorial.alwaysShow': 'Mostrar siempre el tutorial',
+  'tutorial.alwaysShowSub': 'Mostrar antes de cada grabación',
+  'tutorial.netHeight': 'Altura de la red',
+  'tutorial.optimal': 'Óptimo',
+  'tutorial.rotate90': 'Girar 90°',
+  'tutorial.tripod': 'Trípode',
+  'tutorial.recommended': 'Recomendado',
+  'tutorial.or': 'o',
+  'tutorial.fenceGlass': 'Valla / Cristal',
+  'tutorial.stable': 'Estable',
+  'tutorial.good': 'Bien',
+  'tutorial.bad': 'Mal',
+  'tutorial.sunBehind': 'Sol a tu\nespalda',
+  'tutorial.againstSun': 'Contra\nel sol',
+  'tutorial.slide1Title': 'Colocación lateral',
+  'tutorial.slide1Desc': 'Coloca tu móvil fuera de la pista, en el lateral a la altura de la red. Así la cámara capta toda la pista desde una buena perspectiva.',
+  'tutorial.slide2Title': 'Usa horizontal',
+  'tutorial.slide2Desc': 'Gira tu móvil a horizontal. Así toda la pista de pádel entra en el encuadre y el análisis IA da mejores resultados.',
+  'tutorial.slide3Title': 'Sujétalo bien',
+  'tutorial.slide3Desc': 'Usa un trípode o apoya el móvil de forma segura en la valla. Las grabaciones movidas reducen mucho la calidad del análisis.',
+  'tutorial.slide4Title': 'Cuida la luz',
+  'tutorial.slide4Desc': 'No grabes a contraluz. Lo ideal es una iluminación uniforme. La cámara debe apuntar hacia el sol, no en sentido contrario.',
+
+  // Contraseña olvidada
+  'onboarding.forgotInfo': 'Introduce tu correo electrónico. Te enviaremos un enlace para restablecer tu contraseña.',
+
+  // Valoración + error al guardar
+  'rating.title': 'Valora PadelVision ⭐',
+  'rating.msg': '¡Ya has analizado 3 partidos! Ayúdanos con una valoración rápida en la App Store.',
+  'rating.later': 'Más tarde',
+  'rating.now': '⭐ Valorar ahora',
+  'error.saveTitle': 'Error al guardar',
+  'error.saveMsg': 'No se pudo guardar el partido:\n\n{msg}',
 };
 
 const fr: Record<string, string> = {
@@ -1575,9 +1692,61 @@ const fr: Record<string, string> = {
   'setup.next': 'Continuer',
   "setup.getStarted": "C'est parti",
   'setup.skip': 'Passer',
+
+  // Tutoriel (configuration d'enregistrement)
+  'tutorial.skip': 'Passer',
+  'tutorial.back': 'Retour',
+  'tutorial.next': 'Suivant',
+  'tutorial.start': 'Démarrer',
+  'tutorial.alwaysShow': 'Toujours afficher le tutoriel',
+  'tutorial.alwaysShowSub': 'Afficher avant chaque enregistrement',
+  'tutorial.netHeight': 'Hauteur du filet',
+  'tutorial.optimal': 'Optimal',
+  'tutorial.rotate90': 'Pivoter 90°',
+  'tutorial.tripod': 'Trépied',
+  'tutorial.recommended': 'Recommandé',
+  'tutorial.or': 'ou',
+  'tutorial.fenceGlass': 'Grillage / Vitre',
+  'tutorial.stable': 'Stable',
+  'tutorial.good': 'Bien',
+  'tutorial.bad': 'Mauvais',
+  'tutorial.sunBehind': 'Soleil dans\nle dos',
+  'tutorial.againstSun': 'Face\nau soleil',
+  'tutorial.slide1Title': 'Placement latéral',
+  'tutorial.slide1Desc': "Place ton téléphone à l'extérieur du court, sur le côté à hauteur du filet. La caméra capte ainsi tout le court sous un bon angle.",
+  'tutorial.slide2Title': 'Utilise le mode paysage',
+  'tutorial.slide2Desc': "Tourne ton téléphone en mode paysage. Tout le court de padel tient dans le cadre et l'analyse IA donne de meilleurs résultats.",
+  'tutorial.slide3Title': 'Fixe-le solidement',
+  'tutorial.slide3Desc': "Utilise un trépied ou cale le téléphone contre le grillage. Les vidéos tremblantes réduisent fortement la qualité de l'analyse.",
+  'tutorial.slide4Title': 'Attention à la lumière',
+  'tutorial.slide4Desc': "Ne filme pas à contre-jour. Un éclairage uniforme est idéal. La caméra doit être orientée vers le soleil, pas dos à lui.",
+
+  // Mot de passe oublié
+  'onboarding.forgotInfo': "Saisis ton adresse e-mail. Nous t'enverrons un lien pour réinitialiser ton mot de passe.",
+
+  // Évaluation + erreur d'enregistrement
+  'rating.title': 'Noter PadelVision ⭐',
+  'rating.msg': "Tu as déjà analysé 3 matchs ! Aide-nous avec une évaluation rapide sur l'App Store.",
+  'rating.later': 'Plus tard',
+  'rating.now': '⭐ Noter maintenant',
+  'error.saveTitle': "Erreur d'enregistrement",
+  'error.saveMsg': "Le match n'a pas pu être enregistré :\n\n{msg}",
 };
 
 const ALL: Record<LocaleCode, Record<string, string>> = { en, de, es, fr };
+
+// Standalone-Uebersetzung fuer Code ausserhalb von React-Komponenten (z. B. Stores).
+// Wird von LocaleProvider auf die aktuelle Sprache synchronisiert.
+let _activeLocale: LocaleCode = 'en';
+export function translate(key: string, args?: Record<string, string | number>): string {
+  let str = ALL[_activeLocale][key] ?? ALL.en[key] ?? key;
+  if (args) {
+    Object.entries(args).forEach(([k, v]) => {
+      str = str.replace(`{${k}}`, String(v));
+    });
+  }
+  return str;
+}
 
 // ── Locale-specific arrays ────────────────────────────────────────────────────
 
@@ -2046,6 +2215,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     setLocaleChosen(true);
     AsyncStorage.setItem(LOCALE_KEY, code).catch(() => {});
   }, []);
+
+  // Standalone-translate() (Stores etc.) auf aktuelle Sprache spiegeln
+  _activeLocale = locale;
 
   const t = useCallback((key: string, args?: Record<string, string | number>): string => {
     let str = ALL[locale][key] ?? ALL.en[key] ?? key;

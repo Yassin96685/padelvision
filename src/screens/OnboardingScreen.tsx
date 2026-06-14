@@ -371,7 +371,7 @@ export default function OnboardingScreen() {
             {/* Info text for forgot mode */}
             {mode === 'forgot' && (
               <Text style={{ color: colors.textSec, fontSize: 13, lineHeight: 20, marginTop: -4 }}>
-                Gib deine E-Mail-Adresse ein. Wir senden dir einen Link zum Zurücksetzen deines Passworts.
+                {t('onboarding.forgotInfo')}
               </Text>
             )}
 
