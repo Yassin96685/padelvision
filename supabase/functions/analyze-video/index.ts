@@ -23,8 +23,8 @@ const POSITION_LABEL: Record<string, string> = {
 
 function buildPrompt(frameCount: number, durationSecs: number, locale: string, playerPosition?: string): string {
   const durationMin = (durationSecs / 60).toFixed(1);
-  const lang = LANG_LABEL[locale] ?? 'German';
-  const z    = ZONES[locale] ?? ZONES['de'];
+  const lang = LANG_LABEL[locale] ?? 'English';
+  const z    = ZONES[locale] ?? ZONES['en'];
   const focusLine = playerPosition && POSITION_LABEL[playerPosition]
     ? `\n\n⚠️ CRITICAL — ONE PLAYER ONLY ⚠️\nThe player being analyzed is in the **${POSITION_LABEL[playerPosition]}** of the court.\nYou MUST track and assess ONLY THIS ONE PLAYER across all frames.\nCOMPLETELY IGNORE all other players on the court (opponents and partner).\nAll statistics (shots, winners, errors, zones) refer exclusively to this one player.\n`
     : '';
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
 
   try {
-    const { frames, durationSecs, locale = 'de', playerPosition } = await req.json();
+    const { frames, durationSecs, locale = 'en', playerPosition } = await req.json();
 
     const apiKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
     if (!apiKey) {

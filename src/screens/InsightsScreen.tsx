@@ -6,6 +6,7 @@ import { useTheme } from '../theme/ThemeContext';
 import { useMatches, AnalysisResult } from '../store/MatchContext';
 import {
   useLocale, DATE_LOCALE, DRILLS_BY_LOCALE,
+  AI_STRENGTHS_BY_LOCALE, AI_IMPROVEMENTS_BY_LOCALE,
   AI_STRENGTH_DETAIL_BY_LOCALE, AI_IMPROVEMENT_DETAIL_BY_LOCALE,
   IMPROVEMENT_DRILLS_BY_LOCALE,
 } from '../i18n/LocaleContext';
@@ -103,6 +104,8 @@ export default function InsightsScreen() {
     ? t('stats.sessionRecorded')
     : t('stats.sessionsRecorded', { n: matches.length });
 
+  const strengthMap = AI_STRENGTHS_BY_LOCALE[locale];
+  const improvementMap = AI_IMPROVEMENTS_BY_LOCALE[locale];
   const strengthDetailMap = AI_STRENGTH_DETAIL_BY_LOCALE[locale];
   const improvDetailMap = AI_IMPROVEMENT_DETAIL_BY_LOCALE[locale];
   const { strengthKeys: derivedStrengthKeys, improvementKeys: derivedImprovementKeys } = deriveMatchKeys(selected.result);
@@ -212,6 +215,7 @@ export default function InsightsScreen() {
             <View style={s.listCard}>
               {selected.result.strengths.map((item, i) => {
                 const key = derivedStrengthKeys[i];
+                const label = (key && strengthMap[key]) ? strengthMap[key] : item;
                 const detail = key ? strengthDetailMap[key] : null;
                 const isOpen = expandedStrength === i;
                 return (
@@ -225,7 +229,7 @@ export default function InsightsScreen() {
                       <Ionicons name="checkmark" size={14} color={colors.primary} />
                     </View>
                     <View style={s.listTextWrap}>
-                      <Text style={s.listText}>{item}</Text>
+                      <Text style={s.listText}>{label}</Text>
                       {isOpen && detail ? (
                         <Text style={[s.listDetail, { color: colors.textSec }]}>{detail}</Text>
                       ) : null}
@@ -250,6 +254,9 @@ export default function InsightsScreen() {
             <View style={s.listCard}>
               {selected.result.improvements.map((item, i) => {
                 const key = derivedImprovementKeys[i];
+                const label = (key && improvementMap[key])
+                  ? improvementMap[key].replace('{errorRate}', String(selected.result.errorRate))
+                  : item;
                 const detail = key ? improvDetailMap[key] : null;
                 const isOpen = expandedImprovement === i;
                 return (
@@ -263,7 +270,7 @@ export default function InsightsScreen() {
                       <Ionicons name="arrow-up" size={14} color={colors.warning} />
                     </View>
                     <View style={s.listTextWrap}>
-                      <Text style={s.listText}>{item}</Text>
+                      <Text style={s.listText}>{label}</Text>
                       {isOpen && detail ? (
                         <Text style={[s.listDetail, { color: colors.textSec }]}>{detail}</Text>
                       ) : null}

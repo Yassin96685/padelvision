@@ -54,7 +54,7 @@ async function extractFrames(videoUri: string, durationSecs: number): Promise<st
 export async function analyzeVideo(
   videoUri: string,
   durationSecs: number,
-  locale: string = 'de',
+  locale: string = 'en',
   playerPosition?: string,
 ): Promise<ClaudeAnalysisResult | null> {
   const frames = await extractFrames(videoUri, durationSecs);
