@@ -26,12 +26,39 @@ const USER_KEY = '@padelvision/user';
 
 // Quadrat mit zwei voll abgerundeten, gegenueberliegenden Ecken, um 45 Grad
 // gedreht = mandelfoermiges Auge mit spitzen Augenwinkeln (kein SVG noetig)
-const EYE_SIZE = 130;
+const EYE_SIZE = 184;
 const EYE_BOX = Math.ceil(EYE_SIZE * Math.SQRT2); // Bounding-Box des rotierten Quadrats
+
+// Weisse Wimpern als gefaecherte, zugespitzte Striche ueber dem Oberlid.
+// Vorberechnet aus t in [-1,1]: aussen laenger und staerker nach aussen geneigt.
+const LASH_SPAN = EYE_BOX * 0.82;
+const LASH_TH   = 4;
+const LASHES = (() => {
+  const ts = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1];
+  const maxAngDeg = 34;
+  const Lmin = 17, Lext = 20;
+  const baseLineY = 34, arcDip = 18; // Lid-Linie woelbt sich an den Ecken nach unten
+  return ts.map((t) => {
+    const ang = (t * maxAngDeg * Math.PI) / 180;
+    const x   = t * (LASH_SPAN / 2);
+    const baseY = baseLineY + t * t * arcDip;
+    const L = Lmin + Math.abs(t) * Lext;
+    const cx = LASH_SPAN / 2 + x + (L / 2) * Math.sin(ang);
+    const cy = baseY - (L / 2) * Math.cos(ang);
+    return {
+      left: cx - LASH_TH / 2,
+      top: cy - L / 2,
+      width: LASH_TH,
+      height: L,
+      rotate: `${t * maxAngDeg}deg`,
+      opacity: 0.8 + 0.2 * Math.abs(t),
+    };
+  });
+})();
 
 function SplashView() {
   const eyeOpen    = useRef(new Animated.Value(0)).current;   // 0 = geschlossen, 1 = offen
-  const racketY    = useRef(new Animated.Value(130)).current; // Schlaeger startet unterhalb, vom Lid verdeckt
+  const racketY    = useRef(new Animated.Value(150)).current; // Schlaeger startet unterhalb, vom Lid verdeckt
   const dotOpacity = useRef(new Animated.Value(0)).current;
   const dotScale   = useRef(new Animated.Value(0.3)).current;
   const glow       = useRef(new Animated.Value(0)).current;
@@ -47,9 +74,9 @@ function SplashView() {
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }),
-      // Schlaegerkopf-Mitte landet im Augenzentrum (Kopf 56 + Hals 6 + Griff 22 → Offset 14)
+      // Schlaegerkopf-Mitte landet im Augenzentrum (Kopf 78 + Hals 8 + Griff 31 → Offset 19)
       Animated.timing(racketY, {
-        toValue: 14,
+        toValue: 19,
         duration: 650,
         easing: Easing.out(Easing.back(1.3)),
         useNativeDriver: true,
@@ -71,15 +98,55 @@ function SplashView() {
   return (
     <View style={{ flex: 1, backgroundColor: '#090C14', justifyContent: 'center', alignItems: 'center' }}>
       <StatusBar style="light" />
-      <Animated.View style={{ transform: [{ scaleY: eyeOpen.interpolate({ inputRange: [0, 1], outputRange: [0.05, 0.85] }) }] }}>
+
+      {/* Weicher gruener Halo hinter dem Auge */}
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          width: EYE_BOX * 1.3,
+          height: EYE_BOX * 1.3,
+          borderRadius: EYE_BOX,
+          backgroundColor: '#00E87D',
+          opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.05, 0.13] })),
+        }}
+      />
+
+      <Animated.View style={{ transform: [{ scaleY: eyeOpen.interpolate({ inputRange: [0, 1], outputRange: [0.05, 0.92] }) }] }}>
+
+        {/* Weisse Wimpern ueber dem Oberlid — fahren mit dem Lid auf */}
+        <Animated.View
+          pointerEvents="none"
+          style={{ position: 'absolute', left: 0, right: 0, top: -8, height: 56, alignItems: 'center', opacity: eyeOpen }}
+        >
+          <View style={{ width: LASH_SPAN, height: 56 }}>
+            {LASHES.map((l, i) => (
+              <View
+                key={i}
+                style={{
+                  position: 'absolute',
+                  left: l.left,
+                  top: l.top,
+                  width: l.width,
+                  height: l.height,
+                  borderRadius: l.width / 2,
+                  backgroundColor: '#FFFFFF',
+                  opacity: l.opacity,
+                  transform: [{ rotate: l.rotate }],
+                }}
+              />
+            ))}
+          </View>
+        </Animated.View>
+
         <View
           style={{
             width: EYE_SIZE,
             height: EYE_SIZE,
             borderTopLeftRadius: EYE_SIZE,
             borderBottomRightRadius: EYE_SIZE,
-            borderWidth: 2,
-            borderColor: '#1D2535',
+            borderWidth: 2.5,
+            borderColor: '#22304A',
             backgroundColor: '#0F1320',
             overflow: 'hidden',
             justifyContent: 'center',
@@ -103,24 +170,24 @@ function SplashView() {
             <Animated.View style={{ position: 'absolute', alignItems: 'center', transform: [{ translateY: racketY }] }}>
               <View
                 style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 28,
+                  width: 78,
+                  height: 78,
+                  borderRadius: 39,
                   backgroundColor: '#141B2E',
-                  borderWidth: 2,
+                  borderWidth: 2.5,
                   borderColor: 'rgba(0,232,125,0.45)',
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
               >
-                {[[-19, 0], [19, 0], [-10, -17], [10, -17], [-10, 17], [10, 17]].map(([x, y], i) => (
+                {[[-27, 0], [27, 0], [-14, -24], [14, -24], [-14, 24], [14, 24]].map(([x, y], i) => (
                   <View
                     key={i}
                     style={{
                       position: 'absolute',
-                      width: 4,
-                      height: 4,
-                      borderRadius: 2,
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
                       backgroundColor: 'rgba(255,255,255,0.14)',
                       transform: [{ translateX: x }, { translateY: y }],
                     }}
@@ -129,9 +196,9 @@ function SplashView() {
                 <Animated.View
                   style={{
                     position: 'absolute',
-                    width: 40,
-                    height: 40,
-                    borderRadius: 20,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
                     backgroundColor: '#00E87D',
                     opacity: Animated.multiply(dotOpacity, glow.interpolate({ inputRange: [0, 1], outputRange: [0.12, 0.30] })),
                     transform: [{ scale: glow.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] }) }],
@@ -139,26 +206,26 @@ function SplashView() {
                 />
                 <Animated.View
                   style={{
-                    width: 18,
-                    height: 18,
-                    borderRadius: 9,
+                    width: 25,
+                    height: 25,
+                    borderRadius: 12.5,
                     backgroundColor: '#00E87D',
                     opacity: dotOpacity,
                     transform: [{ scale: dotScale }],
                     shadowColor: '#00E87D',
                     shadowOpacity: 0.9,
-                    shadowRadius: 12,
+                    shadowRadius: 16,
                     shadowOffset: { width: 0, height: 0 },
                   }}
                 />
                 <Animated.View
                   style={{
                     position: 'absolute',
-                    top: 15,
-                    left: 18,
-                    width: 5,
-                    height: 5,
-                    borderRadius: 2.5,
+                    top: 21,
+                    left: 25,
+                    width: 7,
+                    height: 7,
+                    borderRadius: 3.5,
                     backgroundColor: 'rgba(255,255,255,0.9)',
                     opacity: dotOpacity,
                   }}
@@ -166,20 +233,20 @@ function SplashView() {
               </View>
               <View
                 style={{
-                  width: 14,
-                  height: 6,
+                  width: 20,
+                  height: 8,
                   backgroundColor: '#141B2E',
-                  borderLeftWidth: 2,
-                  borderRightWidth: 2,
+                  borderLeftWidth: 2.5,
+                  borderRightWidth: 2.5,
                   borderColor: 'rgba(0,232,125,0.45)',
                   marginTop: -1,
                 }}
               />
               <View
                 style={{
-                  width: 11,
-                  height: 22,
-                  borderRadius: 5,
+                  width: 15,
+                  height: 31,
+                  borderRadius: 7,
                   backgroundColor: '#1D2535',
                   borderWidth: 1.5,
                   borderColor: '#2A3550',
