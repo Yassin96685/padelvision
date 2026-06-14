@@ -233,11 +233,11 @@ export default function SettingsScreen({ navigation }: any) {
         {/* Account section */}
         {!!userEmail && (
           <>
-            <Text style={s.sectionTitle}>Konto</Text>
+            <Text style={s.sectionTitle}>{t('settings.account')}</Text>
             <View style={s.section}>
               {!!profileName && (
                 <>
-                  <SettingRow icon="person-outline" iconBg={colors.primaryDim} iconColor={colors.primary} label="Benutzername" value={profileName} colors={colors} s={s} onPress={() => {}} />
+                  <SettingRow icon="person-outline" iconBg={colors.primaryDim} iconColor={colors.primary} label={t('settings.username')} value={profileName} colors={colors} s={s} onPress={() => {}} />
                   <View style={s.divider} />
                 </>
               )}
@@ -263,7 +263,7 @@ export default function SettingsScreen({ navigation }: any) {
             >
               <View style={s.proLeft}>
                 <Text style={s.proTitle}>PadelVision Pro</Text>
-                <Text style={s.proSub}>KI-Analyse · Shot Timeline · Unbegrenzte Matches</Text>
+                <Text style={s.proSub}>{t('settings.proSub')}</Text>
               </View>
               <View style={s.proArrow}>
                 <Ionicons name="arrow-forward" size={18} color="#000" />
