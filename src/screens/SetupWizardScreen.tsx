@@ -70,6 +70,17 @@ export default function SetupWizardScreen({ onDone }: { onDone: () => void }) {
   const [step,      setStep]      = useState(0);
   const [lang,      setLang]      = useState('');
   const [name,      setName]      = useState('');
+
+  React.useEffect(() => {
+    AsyncStorage.getItem('@padelvision/user')
+      .then(json => {
+        if (json) {
+          const user = JSON.parse(json) as { username?: string };
+          if (user.username) setName(user.username);
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [level,     setLevel]     = useState('');
   const [goal,      setGoal]      = useState('');
   const [position,  setPosition]  = useState('');

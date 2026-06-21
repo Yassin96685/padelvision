@@ -75,6 +75,39 @@ export default function SettingsScreen({ navigation }: any) {
     });
   }, []);
 
+  const deleteAccount = () => {
+    Alert.alert(
+      t('settings.deleteAccountTitle'),
+      t('settings.deleteAccountMsg'),
+      [
+        { text: t('settings.deleteAccountCancel'), style: 'cancel' },
+        {
+          text: t('settings.deleteAccountConfirm'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const { data: { session } } = await supabase.auth.getSession();
+              const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+              const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
+              const res = await fetch(`${supabaseUrl}/functions/v1/delete-account`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${session?.access_token ?? ''}`,
+                  'apikey': anonKey,
+                },
+              });
+              if (!res.ok) throw new Error('delete failed');
+              await signOut();
+            } catch {
+              Alert.alert(t('settings.deleteAccountError'));
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const changePassword = async () => {
     if (newPassword.length < 6) { setPasswordError(t('resetPw.tooShort')); return; }
     if (newPassword !== confirmPassword) { setPasswordError(t('resetPw.mismatch')); return; }
@@ -355,6 +388,11 @@ export default function SettingsScreen({ navigation }: any) {
         <TouchableOpacity style={[s.signOutBtn, { borderColor: colors.danger + '66' }]} onPress={signOut} activeOpacity={0.75}>
           <Ionicons name="log-out-outline" size={18} color={colors.danger} />
           <Text style={[s.signOutText, { color: colors.danger }]}>{t('settings.signOut')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[s.signOutBtn, { borderColor: colors.danger + '33', marginTop: 10 }]} onPress={deleteAccount} activeOpacity={0.75}>
+          <Ionicons name="trash-outline" size={18} color={colors.danger} />
+          <Text style={[s.signOutText, { color: colors.danger }]}>{t('settings.deleteAccount')}</Text>
         </TouchableOpacity>
 
         <View style={{ height: 16 }} />
