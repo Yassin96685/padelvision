@@ -252,6 +252,9 @@ function generateMatchErrors(match: StoredMatch, locale: LocaleCode): ErrorEntry
   return indices.slice(0, n).map((poolIdx, i) => ({ ...pool[poolIdx], id: String(i + 1) }));
 }
 
+// Number of free analyses a non-Pro user gets before the paywall.
+const FREE_ANALYSIS_LIMIT = 3;
+
 export default function AnalysisScreen({ navigation, route }: { navigation: any; route: any }) {
   const { colors } = useTheme();
   const s = useMemo(() => createStyles(colors), [colors]);
@@ -642,7 +645,7 @@ export default function AnalysisScreen({ navigation, route }: { navigation: any;
         .from('matches')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId);
-      if ((count ?? 0) >= 1) {
+      if ((count ?? 0) >= FREE_ANALYSIS_LIMIT) {
         await AsyncStorage.setItem(`@padelvision/free_analysis_done_${userId}`, 'true').catch(() => {});
         try { navigation.navigate('Paywall'); } catch {}
         return false;

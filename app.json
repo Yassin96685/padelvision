@@ -2,7 +2,7 @@
   "expo": {
     "name": "PadelVision",
     "slug": "MyApp",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scheme": "padelvision",
     "newArchEnabled": false,
     "orientation": "portrait",

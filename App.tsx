@@ -24,6 +24,9 @@ initPurchases();
 
 const USER_KEY = '@padelvision/user';
 
+// Number of free analyses a non-Pro user gets before the paywall.
+const FREE_ANALYSIS_LIMIT = 3;
+
 // Quadrat mit zwei voll abgerundeten, gegenueberliegenden Ecken, um 45 Grad
 // gedreht = mandelfoermiges Auge mit spitzen Augenwinkeln (kein SVG noetig)
 const EYE_SIZE = 184;
@@ -402,8 +405,19 @@ function Root() {
   const markFreeAnalysisDone = useCallback(() => {
     const uid = session?.user?.id;
     if (!uid) return;
-    AsyncStorage.setItem(`@padelvision/free_analysis_done_${uid}`, 'true').catch(() => {});
-    setFreeAnalysisDone(true);
+    // Only wall the app once the user has used up all their free analyses.
+    (async () => {
+      try {
+        const { count } = await supabase
+          .from('matches')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', uid);
+        if ((count ?? 0) >= FREE_ANALYSIS_LIMIT) {
+          AsyncStorage.setItem(`@padelvision/free_analysis_done_${uid}`, 'true').catch(() => {});
+          setFreeAnalysisDone(true);
+        }
+      } catch {}
+    })();
   }, [session?.user?.id]);
 
   if (isRecovery) {
